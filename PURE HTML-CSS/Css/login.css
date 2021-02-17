@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+* {
+  padding: 0;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgba(71, 164, 231, 0.3) 0%,
+    rgba(71, 164, 231, 0) 100%
+  );
+}
+
+.container {
+  position: absolute;
+  width: 400px;
+  height: 500px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+}
+
+.container a {
+  text-decoration: none;
+}
+
+.login-signup {
+  width: 300px;
+  height: 80px;
+  margin: 10px auto;
+  display: flex;
+}
+.login {
+  width: 50%;
+  margin: auto 0;
+  cursor: pointer;
+}
+.login p {
+  width: 100%;
+  font-weight: 700;
+  font-size: 30px;
+  text-align: center;
+  padding: 10px 0;
+  color: rgba(0, 0, 0);
+}
+.login .line {
+  width: 100%;
+  border: 5px solid rgba(0, 0, 0);
+}
+
+.signup {
+  width: 50%;
+  margin: auto 0;
+  cursor: pointer;
+}
+
+.signup p {
+  width: 100%;
+  font-weight: 700;
+  font-size: 30px;
+  text-align: center;
+  padding: 10px 0;
+  color: rgba(0, 0, 0, 0.5);
+}
+.signup .line {
+  width: 100%;
+  border: 5px solid rgba(0, 0, 0, 0.5);
+}
+.inputs {
+  width: 300px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+.field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+.field span {
+  font-weight: 500;
+  font-size: 20px;
+}
+.field input,
+select {
+  border-radius: 40px;
+  padding: 5px;
+  margin: 2px 0;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  outline: none;
+}
+.field input[type='button'] {
+  background: rgba(71, 164, 231, 0.5);
+  font-weight: 500;
+  cursor: pointer;
+  width: 95%;
+}
+.field input[type='file'] {
+  display: none;
+}
+
+.field input[type='file']::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.inputs > div {
+  flex: 0 50%;
+  box-sizing: border-box;
+}
+input[type='checkbox'] {
+  margin-left: 10px;
+}
+.submit {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.submit button {
+  width: 200px;
+  border-radius: 20px;
+  padding: 5px;
+  margin: 20px;
+  font-weight: 700;
+  font-size: 25px;
+  background: #47a4e7;
+  outline: none;
+  cursor: pointer;
+}
+.submit a {
+  text-decoration: none;
+}
