@@ -25,6 +25,7 @@ body {
   border-radius: 20px;
   padding: 10px 50px;
   top: 100px;
+  z-index: 1;
 }
 .information {
   display: flex;
@@ -56,6 +57,7 @@ body {
   border: none;
   outline: none;
   font-weight: 700;
+  cursor: pointer;
 }
 .fas.fa-cog {
   position: absolute;
@@ -72,6 +74,7 @@ body {
   border: none;
   outline: none;
   font-weight: 700;
+  cursor: pointer;
 }
 
 .call {
@@ -86,7 +89,6 @@ body {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 2;
 }
 .startCall {
   width: 600px;
