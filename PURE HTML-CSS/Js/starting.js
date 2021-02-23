@@ -1,13 +1,18 @@
-let video = document.querySelector('#video');
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  navigator.mediaDevices
-    .getUserMedia({ video: true })
-    .then((stream) => {
-      console.log('object');
-      video.srcObject = stream;
-      video.addEventListener('loadedmetadata', () => {
-        video.play();
-      });
-    })
-    .catch((err) => console.log(err));
-}
+const participants = document.querySelector('.participants');
+const participants_2 = document.querySelector('.participants_2');
+const showParticipants = document.querySelector('#participants_2');
+showParticipants.addEventListener('click', () => {
+  const isOpen = participants_2.classList;
+  if (isOpen.contains('show')) {
+    isOpen.remove('show');
+  } else {
+    isOpen.add('show');
+  }
+  document.querySelector('.users').classList.add('show');
+  participants.classList.remove('show');
+});
+document.querySelector('.users').addEventListener('click', () => {
+  participants.classList.add('show');
+  participants_2.classList.remove('show');
+  document.querySelector('.users').classList.remove('show');
+});

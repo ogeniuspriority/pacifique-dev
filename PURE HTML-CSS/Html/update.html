@@ -32,14 +32,19 @@
         </div>
         <div class="field">
           <span>Profile Picture</span>
-          <input type="button" value="UPLOAD" />
-          <input type="file" />
+          <input id="upload" type="button" value="UPLOAD" />
+          <input id="upload-file" type="file" accept=".gif,.jpg,.jpeg,.png" />
         </div>
       </div>
       <section class="submit">
         <a href="login.html"><button>CANCEL</button></a>
-        <a href="login.html"><button>UPDATE</button></a>
+        <a href="userpage.html"><button>UPDATE</button></a>
       </section>
     </div>
+    <script>
+      let upload = document.querySelector('#upload');
+      let upload_file = document.querySelector('#upload-file');
+      upload.addEventListener('click', () => upload_file.click());
+    </script>
   </body>
 </html>
