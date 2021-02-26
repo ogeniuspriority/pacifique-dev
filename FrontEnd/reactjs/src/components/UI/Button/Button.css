@@ -1,0 +1,43 @@
+.Button {
+  background-color: transparent;
+  border: none;
+  justify-content: center;
+  outline: none;
+  cursor: pointer;
+  font: inherit;
+  font-weight: bold;
+}
+.Button.Large {
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.Button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.Button.Normal:hover {
+  background-color: #3083be;
+}
+
+.Normal {
+  background-color: #47a4e7;
+}
+
+.Second {
+  background-color: rgba(71, 164, 231, 0.5);
+}
+
+.Button.Second:hover {
+  background-color: rgba(71, 164, 231);
+}
+
+.Danger {
+  background-color: #a60000;
+}
+
+.Button.Danger:hover {
+  background-color: #ff0000;
+}
