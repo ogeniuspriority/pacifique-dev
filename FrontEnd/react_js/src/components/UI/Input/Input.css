@@ -1,28 +1,37 @@
 .Input {
+  flex: 0 50%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
   padding: 10px;
   box-sizing: border-box;
 }
 
 .Label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 8px;
+  font-weight: 500;
+  font-size: 20px;
 }
 
 .InputElement {
-  width: 100%;
+  border-radius: 40px;
+  padding: 5px;
+  margin: 2px 0;
+  border: 1px solid rgba(0, 0, 0, 0.5);
   outline: none;
-  border: 1px solid #ccc;
-  font: inherit;
-  padding: 6px 10px;
-  display: block;
-  box-sizing: border-box;
 }
 
 .InputElement:focus {
   outline: none;
   background-color: #ccc;
+}
+.InputElement[type='button'] {
+  background: rgba(71, 164, 231, 0.5);
+  font-weight: 500;
+  cursor: pointer;
+  width: 95%;
+}
+.InputElement[type='button']:hover {
+  background: rgba(71, 164, 231);
 }
 
 .Invalid {

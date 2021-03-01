@@ -1,40 +1,22 @@
-.Signup {
+.Login {
   position: absolute;
-  width: 700px;
+  width: 400px;
   height: 500px;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   background-color: #fff;
 }
-.Signup a {
+.Login a {
   text-decoration: none;
 }
 
 .Login_Signup {
-  width: 500px;
+  width: 300px;
   height: 80px;
   margin: 10px auto;
   display: flex;
 }
-.LoginDiv {
-  width: 50%;
-  margin: auto 0;
-  cursor: pointer;
-}
-.LoginDiv p {
-  width: 100%;
-  font-weight: 700;
-  font-size: 30px;
-  text-align: center;
-  padding: 10px 0;
-  color: rgba(0, 0, 0, 0.5);
-}
-.LoginDiv .Line {
-  width: 100%;
-  border-top: 10px solid rgba(0, 0, 0, 0.5);
-}
-
 .SignupDiv {
   width: 50%;
   margin: auto 0;
@@ -47,17 +29,42 @@
   font-size: 30px;
   text-align: center;
   padding: 10px 0;
-  color: rgba(0, 0, 0);
+  color: rgba(0, 0, 0, 0.5);
 }
 .SignupDiv .Line {
+  width: 100%;
+  border-top: 10px solid rgba(0, 0, 0, 0.5);
+}
+
+.LoginDiv {
+  width: 50%;
+  margin: auto 0;
+  cursor: pointer;
+}
+
+.LoginDiv p {
+  width: 100%;
+  font-weight: 700;
+  font-size: 30px;
+  text-align: center;
+  padding: 10px 0;
+  color: rgba(0, 0, 0);
+}
+.LoginDiv .Line {
   width: 100%;
   border-top: 10px solid rgba(0, 0, 0);
 }
 .Inputs {
-  width: 500px;
+  width: 300px;
   margin: auto;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+}
+.field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
 }
 .Inputs input[type='file'] {
   display: none;
@@ -80,7 +87,7 @@
   align-items: center;
 }
 @media screen and (max-width: 750px) {
-  .Signup {
+  .Login {
     width: 95%;
     height: auto;
     margin: 10px auto;

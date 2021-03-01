@@ -1,24 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import classes from './Signup.css';
+import classes from './Login.css';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import { checkValidity, updateObject } from '../../shared/utility';
 
 const Signup = () => {
   const [controls, setControls] = useState({
-    Names: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        placeholder: 'Names',
-      },
-      value: '',
-      validation: {
-        required: false,
-      },
-    },
     Email: {
       elementType: 'input',
       elementConfig: {
@@ -33,39 +22,6 @@ const Signup = () => {
       valid: false,
       touched: false,
     },
-    Phone: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        placeholder: 'Phone',
-      },
-      value: '',
-      validation: {
-        required: true,
-        isValidNumber: true,
-      },
-      valid: false,
-      touched: false,
-    },
-    Gender: {
-      elementType: 'select',
-      elementConfig: {
-        options: [
-          {
-            value: 'M',
-            dispayValue: 'Male',
-          },
-          {
-            value: 'F',
-            dispayValue: 'Female',
-          },
-        ],
-      },
-      value: '',
-      validation: {
-        required: false,
-      },
-    },
     Password: {
       elementType: 'input',
       elementConfig: {
@@ -79,16 +35,6 @@ const Signup = () => {
       },
       valid: false,
       touched: false,
-    },
-    'Profile Picture': {
-      elementType: 'button',
-      elementConfig: {
-        type: 'button',
-      },
-      value: 'UPLOAD',
-      validation: {
-        required: false,
-      },
     },
   });
   const inputChangedHandler = (event, controlName) => {
@@ -125,33 +71,29 @@ const Signup = () => {
     />
   ));
   return (
-    <div className={classes.Signup}>
+    <div className={classes.Login}>
       <div className={classes.Login_Signup}>
         <div className={classes.LoginDiv}>
-          <Link to="/login">
-            <p>LOG IN</p>
-            <div className={classes.Line}></div>
-          </Link>
+          <p>LOG IN</p>
+          <div className={classes.Line}></div>
         </div>
         <div className={classes.SignupDiv}>
-          <p>SIGN UP</p>
-          <div className={classes.Line}></div>
+          <Link to="/">
+            <p>SIGN UP</p>
+            <div className={classes.Line}></div>
+          </Link>
         </div>
       </div>
       <div className={classes.Inputs}>
         {form}
-        <input type="file" />
-        <section>
-          <input type="checkbox" value="accept" /> Accept terms and policy
-        </section>
         <section className={classes.Submit}>
           <Link to="/userpage">
             <Button size="Large" btnType="Normal">
-              SIGN UP
+              LOG IN
             </Button>
           </Link>
           <p>
-            Already have an account? <Link to="/login">Log in</Link>
+            Don't have an account? <Link to="/">Create one</Link>
           </p>
         </section>
       </div>

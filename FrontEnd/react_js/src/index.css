@@ -1,5 +1,20 @@
-body {
-  margin: 0;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+* {
   padding: 0;
-  font-family: sans-serif;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgba(71, 164, 231, 0.3) 0%,
+    rgba(71, 164, 231, 0) 100%
+  );
+}
+@media screen and (max-width: 750px) {
+  body {
+    background: #47a4e7;
+  }
 }

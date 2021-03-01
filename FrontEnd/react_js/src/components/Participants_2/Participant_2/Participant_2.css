@@ -1,0 +1,15 @@
+.Participant_2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+}
+.Participant_2 .Btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 20px;
+}
+.Participant_2 .Btn i {
+  padding: 0 5px;
+}

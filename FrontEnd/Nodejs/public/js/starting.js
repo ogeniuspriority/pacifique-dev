@@ -53,9 +53,7 @@ chatBtn.addEventListener('click', () => {
 chatBtnMobile.addEventListener('click', () => {
   showChats();
 });
-const cancelAll = () => {
-  
-}
+const cancelAll = () => {};
 document.querySelector('.second').addEventListener('click', () => {
   const isOpen = settings.classList;
   if (isOpen.contains('show')) {

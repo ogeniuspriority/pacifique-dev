@@ -19,6 +19,16 @@ const Input = (props) => {
         />
       );
       break;
+    case 'button':
+      inputElement = (
+        <input
+          className={inputClasses.join(' ')}
+          {...props.elementConfig}
+          value={props.value}
+          onClick={props.inputClicked}
+        />
+      );
+      break;
     case 'textarea':
       inputElement = (
         <textarea

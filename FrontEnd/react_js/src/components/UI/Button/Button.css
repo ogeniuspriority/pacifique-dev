@@ -8,9 +8,16 @@
   font-weight: bold;
 }
 .Button.Large {
-  border-radius: 10px;
-  padding: 10px;
-  margin-top: 10px;
+  border-radius: 20px;
+  padding: 5px 20px;
+  margin: 10px;
+  background-color: #47a4e7;
+}
+
+.Button.Small {
+  width: 80px;
+  height: 30px;
+  margin: 0 10px;
 }
 
 .Button:disabled {
