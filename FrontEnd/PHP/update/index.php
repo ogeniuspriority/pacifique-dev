@@ -1,0 +1,45 @@
+<?php
+$title = 'EDIT';
+$style = '../css/update.css';
+require_once "../partials/header.php"; ?>
+<div class="container">
+    <div class="inputs">
+        <p class="update">Update user information</p>
+        <div class="field">
+            <span>Names</span>
+            <input type="text" placeholder="Names" />
+        </div>
+        <div class="field">
+            <span>Email</span>
+            <input type="text" placeholder="Email" />
+        </div>
+        <div class="field">
+            <span>Phone</span>
+            <input type="text" placeholder="Phone" />
+        </div>
+        <div class="field">
+            <span>Gender</span>
+            <select>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+            </select>
+        </div>
+        <div class="field">
+            <span>Profile Picture</span>
+            <input id="upload" type="button" value="UPLOAD" />
+            <input id="upload-file" type="file" accept=".gif,.jpg,.jpeg,.png" />
+        </div>
+    </div>
+    <section class="submit">
+        <a href="../userpage"><button>CANCEL</button></a>
+        <a href="../userpage"><button>UPDATE</button></a>
+    </section>
+</div>
+<script>
+    let upload = document.querySelector('#upload');
+    let upload_file = document.querySelector('#upload-file');
+    upload.addEventListener('click', () => upload_file.click());
+</script>
+</body>
+
+</html>
