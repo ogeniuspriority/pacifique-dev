@@ -1,0 +1,17 @@
+.Message {
+  width: 300px;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 10px;
+}
+.Message.From {
+  background: rgba(71, 164, 231, 0.3);
+  align-self: flex-end;
+}
+.Message.To {
+  background: rgba(71, 164, 231, 0.8);
+}
+.Details {
+  display: flex;
+  justify-content: space-between;
+}

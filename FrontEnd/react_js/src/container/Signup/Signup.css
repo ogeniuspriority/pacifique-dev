@@ -1,0 +1,109 @@
+.Signup {
+  position: absolute;
+  width: 700px;
+  height: 500px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+}
+.Signup a {
+  text-decoration: none;
+}
+
+.Login_Signup {
+  width: 500px;
+  height: 80px;
+  margin: 10px auto;
+  display: flex;
+}
+.LoginDiv {
+  width: 50%;
+  margin: auto 0;
+  cursor: pointer;
+}
+.LoginDiv p {
+  width: 100%;
+  font-weight: 700;
+  font-size: 30px;
+  text-align: center;
+  padding: 10px 0;
+  color: rgba(0, 0, 0, 0.5);
+}
+.LoginDiv .Line {
+  width: 100%;
+  border-top: 10px solid rgba(0, 0, 0, 0.5);
+}
+
+.SignupDiv {
+  width: 50%;
+  margin: auto 0;
+  cursor: pointer;
+}
+
+.SignupDiv p {
+  width: 100%;
+  font-weight: 700;
+  font-size: 30px;
+  text-align: center;
+  padding: 10px 0;
+  color: rgba(0, 0, 0);
+}
+.SignupDiv .Line {
+  width: 100%;
+  border-top: 10px solid rgba(0, 0, 0);
+}
+.Inputs {
+  width: 500px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+.Inputs input[type='file'] {
+  display: none;
+}
+
+.Inputs input[type='file']::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.Inputs > div {
+  flex: 0 50%;
+  box-sizing: border-box;
+}
+.Inputs input[type='checkbox'] {
+  margin-left: 10px;
+}
+.Submit {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media screen and (max-width: 750px) {
+  .Signup {
+    width: 95%;
+    height: auto;
+    margin: 10px auto;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-sizing: border-box;
+  }
+  .Login_Signup {
+    width: auto;
+    margin: 10px auto;
+    display: flex;
+    height: auto;
+  }
+  .Inputs {
+    width: auto;
+    max-width: 300px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .LoginDiv p,
+  .SignupDiv p {
+    font-size: 25px;
+  }
+}

@@ -1,0 +1,199 @@
+.Audio {
+  position: absolute;
+  width: 100%;
+  height: calc(100vh - 100px);
+  top: 100px;
+}
+.Start_Container {
+  position: absolute;
+  width: 100vw;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.Audio_Start img {
+  width: 200px;
+  height: 200px;
+}
+.Audio_Start {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+.Start {
+  width: 600px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+/* .Start button {
+  border-radius: 20px;
+  padding: 0 40px;
+  font-weight: 700;
+  font-size: 25px;
+  background: #47a4e7;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+.Start input {
+  border-radius: 40px;
+  width: 50%;
+  padding: 5px;
+  margin: 0 50px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  outline: none;
+} */
+.Buttons {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  bottom: 30px;
+  z-index: 2;
+}
+.First {
+  display: flex;
+}
+.Users {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: -40px;
+  right: 60px;
+  background: var(--primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+  display: none;
+}
+.Users.Show {
+  display: flex;
+}
+.Plus {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: -40px;
+  right: 20px;
+  background: var(--primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* .button.second {
+  background: #fff;
+  color: var(--primary);
+} */
+.Participants {
+  position: fixed;
+  top: 120px;
+  right: 20px;
+  background: rgba(71, 164, 231, 0.9);
+  opacity: 0.8;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  z-index: 3;
+  transform: translateX(400px);
+  animation: transform 0.5s ease-in-out;
+}
+.Participants.Show {
+  transform: translateX(0);
+}
+.Participants .Title {
+  display: flex;
+  justify-content: space-between;
+}
+.Participants .Title p {
+  width: 80%;
+  text-align: center;
+  padding: 5px 0 0 20%;
+}
+.Participants .Title div img {
+  cursor: pointer;
+}
+.Participant {
+  position: relative;
+}
+.Participant i {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.Participants .Down {
+  background: #47a4e7;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.Participants_2 {
+  position: fixed;
+  top: 150px;
+  right: 20px;
+  background: #fff;
+  opacity: 0.8;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  z-index: 3;
+  transform: translateX(350px);
+  animation: transform 0.5s ease-in-out;
+}
+.Participants_2.Show {
+  transform: translateX(0);
+}
+.Participants_2 .Title {
+  text-align: center;
+  padding: 5px;
+}
+.Participant_2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+}
+.Participant_2 .Btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 20px;
+}
+.Participant_2 .Btn i {
+  padding: 0 5px;
+}
+.Share {
+  border-radius: 20px;
+  padding: 0 20px;
+  font-weight: 700;
+  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #47a4e7;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+@media screen and (min-width: 750px) {
+  .fas.fa-ellipsis-h {
+    display: none;
+  }
+  #share {
+    display: none;
+  }
+  
+  .Settings {
+    display: none;
+  }
+}

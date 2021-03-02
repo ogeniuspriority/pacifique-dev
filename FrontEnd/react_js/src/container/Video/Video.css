@@ -1,0 +1,164 @@
+.Video {
+  position: absolute;
+  width: 100%;
+  height: calc(100vh - 100px);
+  top: 100px;
+}
+.Myvideo {
+  position: absolute;
+  width: 100vw;
+  height: 100%;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  z-index: 1;
+}
+.Start-Container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.Start {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 2;
+}
+.Buttons {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  bottom: 30px;
+  z-index: 2;
+}
+.First {
+  display: flex;
+}
+.Users {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: -40px;
+  right: 60px;
+  background: var(--primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.Plus {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: -40px;
+  right: 20px;
+  background: var(--primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+.Share {
+  border-radius: 20px;
+  padding: 0 20px;
+  font-weight: 700;
+  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #47a4e7;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 750px) {
+  .fas.fa-ellipsis-h {
+    display: none;
+  }
+  #share {
+    display: none;
+  }
+  .Settings {
+    display: none;
+  }
+}
+@media screen and (max-width: 750px) {
+  .Start {
+    width: 95%;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #000000;
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 5px;
+  }
+  .Start input {
+    width: 100%;
+    margin: 10px 0;
+  }
+  .fas.fa-cog {
+    display: none;
+  }
+  .fas.fa-ellipsis-h {
+    display: inline;
+  }
+  .Button {
+    width: 50px;
+  }
+  #share {
+    display: flex;
+    background: #00aa1b;
+  }
+  .Users {
+    display: flex;
+  }
+  .Hide {
+    display: none;
+  }
+  .Share {
+    display: none;
+  }
+  .Settings {
+    position: fixed;
+    background: #fff;
+    z-index: 5;
+    right: 10px;
+    bottom: 60px;
+    padding: 10px;
+    border-radius: 10px;
+    transform: translateX(750px);
+    animation: transform 0.5s ease-in-out;
+  }
+  .Settings.Show {
+    transform: translateX(0);
+  }
+  .Settings .Setting {
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .Settings span {
+    width: 80%;
+  }
+  #cancel span {
+    width: 100%;
+  }
+  #cancel {
+    text-align: center;
+  }
+}

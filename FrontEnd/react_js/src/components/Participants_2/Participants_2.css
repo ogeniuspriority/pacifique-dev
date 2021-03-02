@@ -1,0 +1,33 @@
+.Participants_2 {
+  position: fixed;
+  max-height: 650px;
+  overflow: scroll;
+  overflow-x: hidden;
+  top: 150px;
+  right: 20px;
+  background: #fff;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  z-index: 3;
+  transform: translateX(750px);
+  animation: transform 0.5s ease-in-out;
+}
+.Participants_2.Show {
+  transform: translateX(0);
+}
+.Participants_2 .Title {
+  text-align: center;
+  padding: 5px;
+}
+
+@media screen and (max-width: 750px) {
+  .Participants_2 {
+    max-height: 450px;
+    width: 95%;
+  }
+  .Participants_2.Show {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

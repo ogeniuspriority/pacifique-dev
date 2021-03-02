@@ -16,68 +16,27 @@ body {
 
 .container {
   position: absolute;
-  width: 700px;
-  height: 500px;
+  width: 500px;
+  height: 600px;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   background-color: #fff;
 }
-
-.login-signup {
-  width: 500px;
-  height: 80px;
-  margin: 10px auto;
-  display: flex;
-}
-.login {
-  width: 50%;
-  margin: auto 0;
-  cursor: pointer;
-}
-
-.login a {
-  text-decoration: none;
-}
-.login p {
-  width: 100%;
+.update {
+  font-size: 25px;
   font-weight: 700;
-  font-size: 30px;
-  text-align: center;
-  padding: 10px 0;
-  color: rgba(0, 0, 0, 0.5);
-}
-.login .line {
-  width: 100%;
-  border: 5px solid rgba(0, 0, 0, 0.5);
-}
-
-.signup {
-  width: 50%;
-  margin: auto 0;
-  cursor: pointer;
-}
-
-.signup p {
-  width: 100%;
-  font-weight: 700;
-  font-size: 30px;
-  text-align: center;
-  padding: 10px 0;
-  color: rgba(0, 0, 0);
-}
-.signup .line {
-  width: 100%;
-  border: 5px solid rgba(0, 0, 0);
+  padding: 20px 0;
 }
 .inputs {
-  width: 500px;
+  width: 350px;
   margin: auto;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
 }
 .field {
-  width: 100%;
+  width: 80%;
   display: flex;
   flex-direction: column;
   padding: 10px;
@@ -94,6 +53,7 @@ select {
   border: 1px solid rgba(0, 0, 0, 0.5);
   outline: none;
 }
+
 .field input[type='button'] {
   background: rgba(71, 164, 231, 0.5);
   font-weight: 500;
@@ -107,18 +67,11 @@ select {
 .field input[type='file']::-webkit-file-upload-button {
   visibility: hidden;
 }
-.inputs > div {
-  flex: 0 50%;
-  box-sizing: border-box;
-}
-input[type='checkbox'] {
-  margin-left: 10px;
-}
+
 .submit {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
 }
 .submit button {
   width: 200px;
@@ -133,4 +86,45 @@ input[type='checkbox'] {
 }
 .submit a {
   text-decoration: none;
+}
+@media screen and (max-width: 750px) {
+  body {
+    background: #47a4e7;
+  }
+  .container {
+    width: 95%;
+    height: auto;
+    margin: 10px auto;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-sizing: border-box;
+  }
+  .inputs {
+    width: auto;
+    max-width: 300px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .field {
+    padding: 5px;
+  }
+  .field span {
+    font-size: 16px;
+  }
+  .field input,
+  select {
+    padding: 3px;
+  }
+  .update {
+    font-size: 20px;
+    padding: 10px 0;
+  }
+  .submit button {
+    width: auto;
+    padding: 0px 15px;
+    margin: 10px;
+    font-size: 20px;
+  }
 }
