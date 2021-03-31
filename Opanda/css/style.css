@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+* {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+.mainDiv {
+  background: #c4c4c4;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 10px;
+  min-height: 90vh;
+}
+.view {
+  background: #c9cae7;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+input[type='radio'] {
+  cursor: pointer;
+}
+.first {
+  background: #c9cae7;
+  box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
+}
+.filter {
+  background: #c9cae7 !important;
+}
+.card_container {
+  background: #efebeb;
+}
+.card_container .summary {
+  background: #8f977d;
+}
+.card_container .students {
+  background: #8f977d;
+}
+.card_container .teachers {
+  background: #8f977d;
+}
+.card_container .number {
+  color: #4c5419;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+  max-height: 120px !important;
+  overflow-y: scroll;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered::-webkit-scrollbar{
+  width: 5px;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered::-webkit-scrollbar-thumb{
+  background: #8f977d;
+}
+@media screen and (max-width: 700px) {
+  /* .type {
+    flex-direction: column;
+    justify-content: center;
+  }
+  .field {
+    width: 100%;
+  }
+  .view {
+    flex-direction: column;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .time {
+    flex-direction: column;
+    align-items: initial;
+  }
+  .first {
+    flex-direction: column;
+    margin: 0;
+    align-items: initial;
+  }
+  .first button {
+    width: 50%;
+    margin: auto;
+  }
+  .filter {
+    width: 50%;
+    margin: 20px auto;
+  }
+  .card .card_container {
+    flex-direction: column;
+  }
+  .card_container .summary,
+  .card_container .students,
+  .card_container .teachers {
+    width: auto;
+    margin: 5px 0;
+    padding: 0;
+  }
+  .card_container .summary {
+    padding: 10px;
+  }
+  .card_container .students p,
+  .card_container .teachers p {
+    text-align: center;
+  } */
+}
