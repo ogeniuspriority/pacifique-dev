@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+* {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #9a9b96;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: #242422;
+  border-radius: 5px;
+}
+.first {
+  background: #e4e8ec;
+}
+.first a {
+  color: #cd5252;
+}
+.header {
+  background: #a7c5e9;
+}
+.mainDiv {
+  background: #e4e8ec;
+}
+.students {
+  background: #5f605c;
+  overflow-x: hidden;
+}
+.student {
+  background: #97a5b6;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+  max-height: 300px;
+  cursor: pointer;
+}
+/* .student:first-child {
+  background: #f2f6fc;
+} */
+.student:hover {
+  background: #f2f6fc;
+}
+.student.focus {
+  background: #f2f6fc;
+}
+.stats {
+  background: #5f605c;
+}
+.choose button {
+  background: #a7c5e9;
+}
+.choose button.focus,
+.choose button:hover {
+  background: #cfd2d6;
+}
+.stats_container {
+  background: #e7efd7;
+}
+
+.time button {
+  background: #a7c5e9;
+}
+.time button.focus,
+.time button:hover {
+  background: #94999d;
+}
+.time button.last {
+  background: #f7fbff;
+}
+.content {
+  background: #838a92;
+  min-height: 300px;
+}
+.content_container {
+  background: #cfe0f4;
+}
+.pagination button.focus,
+.pagination button:hover {
+  z-index: 3;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+/* .pagination button.next,
+.pagination button.prev {
+  background: #242422;
+} */
+.select2-container--default
+  .select2-selection--multiple
+  .select2-selection__rendered {
+  max-height: 80px !important;
+  overflow-y: scroll;
+}
+.select2-container--default
+  .select2-selection--multiple
+  .select2-selection__rendered::-webkit-scrollbar {
+  width: 5px;
+}
+.select2-container--default
+  .select2-selection--multiple
+  .select2-selection__rendered::-webkit-scrollbar-track {
+  background: none;
+  border-radius: none;
+}
+.select2-container--default
+  .select2-selection--multiple
+  .select2-selection__rendered::-webkit-scrollbar-thumb {
+  background: #8f977d;
+}
