@@ -33,12 +33,13 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Child's ReferalID</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Referal ID of the child you want to link">
+                        <input id="refId" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Referal ID of the child you want to link">
+                        <p id="link_message" class="p-1"></p>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Link child</button>
+                    <button id="linkBtn" type="button" class="btn btn-primary">Link child</button>
                 </div>
             </div>
         </div>

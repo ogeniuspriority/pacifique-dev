@@ -62,7 +62,7 @@ $subjects = $con->getSubjects();
                 <label class="form-check-label" for="live">Live classes</label>
             </div>
             <div class="form-check mx-3">
-                <input class="form-check-input" type="radio" name="view" id="quiz" value=11>
+                <input class="form-check-input" type="radio" name="view" id="quiz" value=12>
                 <label class="form-check-label" for="quiz">Quiz/Tests</label>
             </div>
             <div class="form-check mx-3">
@@ -70,7 +70,7 @@ $subjects = $con->getSubjects();
                 <label class="form-check-label" for="books">Digital books</label>
             </div>
             <div class="form-check mx-3">
-                <input class="form-check-input" type="radio" name="view" id="document" value=2>
+                <input class="form-check-input" type="radio" name="view" id="document" value=4>
                 <label class="form-check-label" for="document">Documents</label>
             </div>
         </div>

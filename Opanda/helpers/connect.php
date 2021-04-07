@@ -9,13 +9,12 @@ class Connect extends DB
         $subjects = $this->mysqli->query($get_subjects_sql);
         return $subjects;
     }
-    function getChildren($identifier, $user_type)
+    function getChildren($parent_id)
     {
-        $identifier = strip_tags(trim(htmlspecialchars($identifier)));
-        $user_type = strip_tags(trim(htmlspecialchars($user_type)));
-        $get_children_sql = 'SELECT * FROM users WHERE guardian_tel=? AND user_type=?';
+        $parent_id = strip_tags(trim(htmlspecialchars($parent_id)));
+        $get_children_sql = 'SELECT * FROM users where id IN (SELECT child_id from panda_link_child_to_parent WHERE parent_id = ?)';
         $get_children_statement = $this->mysqli->prepare($get_children_sql);
-        $get_children_statement->bind_param('ss', $identifier, $user_type);
+        $get_children_statement->bind_param('s', $parent_id);
         $get_children_statement->execute();
         $children = $get_children_statement->get_result();
         return $children;
@@ -41,6 +40,10 @@ class Connect extends DB
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user_id = strip_tags(trim(htmlspecialchars($_POST['id'])));
+            if ($user_id == null || $user_id == '') {
+                echo "<div id='content_container' class='content_container rounded p-2'><div class='d-flex justify-content-around'><p>You have got no child linked!!! Click on My children on the top of the page to link with your children</p></div></div>" . "_&_&0";
+                exit();
+            }
             $page = strip_tags(trim(htmlspecialchars($_POST['page'])));
             $date = strip_tags(trim(htmlspecialchars($_POST['date'])));
             $activity = strip_tags(trim(htmlspecialchars($_POST['activity'])));
@@ -87,7 +90,7 @@ class Connect extends DB
             $selected_units = isset($_POST['units']) ? $_POST['units'] : [];
             $unique_students = 0;
             $unique_teachers = 0;
-            $get_unique_views_query = 'SELECT COUNT(DISTINCT unique_views.id) FROM (SELECT users.id FROM live_visibility  INNER JOIN users  ON live_visibility.live_visibility_id_user = users.id  WHERE live_visibility.live_visibility_activity_item_id = ?  AND live_visibility.live_visibility_regdate > ?  AND live_visibility.live_visibility_regdate < ?  AND live_visibility.live_visibility_activity_id = ?  AND users.user_type = ?  GROUP BY live_visibility.single_session_identifier) AS unique_views';
+            $get_unique_views_query = 'SELECT COUNT(DISTINCT unique_views.id) FROM (SELECT users.id FROM live_visibility  INNER JOIN users  ON live_visibility.live_visibility_id_user = users.id  WHERE live_visibility.live_visibility_activity_item_id = ? AND live_visibility.live_visibility_regdate > ?  AND live_visibility.live_visibility_regdate < ?  AND live_visibility.live_visibility_activity_id = ?  AND users.user_type = ?  GROUP BY live_visibility.single_session_identifier) AS unique_views';
             $fun = new Functions();
             $min_date = $fun->checkDate($date)[0];
             $max_date = $fun->checkDate($date)[1];
@@ -95,7 +98,9 @@ class Connect extends DB
                 $unit = strip_tags(trim(htmlspecialchars($unit)));
                 $activity_item = $selected_subject . '_' . $selected_level . '_' . $unit;
                 $unique_students += $fun->getViews($mysqli, $get_unique_views_query, $activity_item, $min_date, $max_date, $activity_id, 'student');
+                $unique_students += $fun->getViewsById($mysqli, $selected_subject, $selected_level, $unit, $min_date, $max_date, $activity_id, 'student');
                 $unique_teachers += $fun->getViews($mysqli, $get_unique_views_query, $activity_item, $min_date, $max_date, $activity_id, 'teacher');
+                $unique_students += $fun->getViewsById($mysqli, $selected_subject, $selected_level, $unit, $min_date, $max_date, $activity_id, 'teacher');
             }
             echo $unique_students . ',' . $unique_teachers;
         }
@@ -118,7 +123,9 @@ class Connect extends DB
                 $unit = strip_tags(trim(htmlspecialchars($unit)));
                 $activity_item = $selected_subject . '_' . $selected_level . '_' . $unit;
                 $all_students += $fun->getViews($mysqli, $get_all_views_query, $activity_item, $min_date, $max_date, $activity_id, 'student');
+                $all_students += $fun->getAllViewsById($mysqli, $selected_subject, $selected_level, $unit, $min_date, $max_date, $activity_id, 'student');
                 $all_teachers += $fun->getViews($mysqli, $get_all_views_query, $activity_item, $min_date, $max_date, $activity_id, 'teacher');
+                $all_students += $fun->getAllViewsById($mysqli, $selected_subject, $selected_level, $unit, $min_date, $max_date, $activity_id, 'teacher');
             }
             echo $all_students . ',' . $all_teachers;
         }
@@ -127,6 +134,10 @@ class Connect extends DB
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user_id = strip_tags(trim(htmlspecialchars($_POST['id'])));
+            if ($user_id == null || $user_id == '') {
+                echo json_encode([]);
+                exit();
+            }
             $date = strip_tags(trim(htmlspecialchars($_POST['date'])));
             $activity = strip_tags(trim(htmlspecialchars($_POST['activity'])));
             $fun = new Functions();
@@ -137,6 +148,7 @@ class Connect extends DB
             $statement->bind_param('ssss', $user_id, $min_date, $max_date, $activity);
             $statement->execute();
             $stats = $statement->get_result();
+            $output = array();
             while ($row_stats = mysqli_fetch_array($stats)) {
                 $span = intval($row_stats[0] / 60);
                 $span = $span . '.' . str_pad(($row_stats[0] % 60), 2, '0', STR_PAD_LEFT);
@@ -147,6 +159,107 @@ class Connect extends DB
                 );
             }
             echo json_encode($output);
+        }
+    }
+    function linkParentChildren($mysqli)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $output = array();
+            $child_ReferalId = strip_tags(trim(htmlspecialchars($_POST['child_referal_id'])));
+            $parent_id = strip_tags(trim(htmlspecialchars($_POST['parent_id'])));
+            if ($child_ReferalId == '') {
+                $output[] = array('error' =>  'Please enter the childs referal Id!');
+                echo json_encode($output);
+                exit();
+            }
+            $check_for_duplicates_sql = 'SELECT * FROM panda_link_child_to_parent WHERE child_id = (SELECT users.id from users INNER JOIN userreferall ON users.id = userreferall.user_id WHERE userreferall.referal_code = ?) AND parent_id = ?';
+            $check_duplicates_statement = $mysqli->prepare($check_for_duplicates_sql);
+            $check_duplicates_statement->bind_param('ss', $child_ReferalId, $parent_id);
+            $check_duplicates_statement->execute();
+            $stats = $check_duplicates_statement->get_result();
+            if ($stats->num_rows > 0) {
+                $output[] = array('error' =>  'Child alredy linked');
+                echo json_encode($output);
+                exit();
+            }
+            $create_parent_child_link_sql = 'INSERT INTO panda_link_child_to_parent (child_id, parent_id) VALUES ((SELECT users.id from users INNER JOIN userreferall ON users.id = userreferall.user_id WHERE userreferall.referal_code = ?), ?)';
+            $statement = $mysqli->prepare($create_parent_child_link_sql);
+            $statement->bind_param('ss', $child_ReferalId, $parent_id);
+            $statement->execute();
+            if ($statement->affected_rows == 1) {
+                $output[] = array('message' =>  'Child successfully linked');
+            } else {
+                $output[] = array('error' =>  'Invalid referal Id!');
+            }
+            echo json_encode($output);
+        }
+    }
+    function getScheduledClasses($mysqli)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = strip_tags(trim(htmlspecialchars($_POST['id'])));
+            $get_scheduled_classes = 'SELECT onlineclass.title, onlineclass.schedule FROM onlineclass INNER JOIN coursestructure ON onlineclass.unit_id = coursestructure.id WHERE coursestructure.level = (SELECT users.academic_level FROM users WHERE users.id = ?) AND onlineclass.schedule > NOW()';
+            $statement = $mysqli->prepare($get_scheduled_classes);
+            $statement->bind_param('s', $id);
+            $statement->execute();
+            $classes = $statement->get_result();
+            $output = array();
+            while ($row_classe = mysqli_fetch_array($classes)) {
+                $output[] = array(
+                    'title' => $row_classe[0],
+                    'date' => $row_classe[1]
+                );
+            }
+            echo json_encode($output);
+        }
+    }
+    function getTeachersHelp($mysqli)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = strip_tags(trim(htmlspecialchars($_POST['id'])));
+            $page = strip_tags(trim(htmlspecialchars($_POST['page'])));
+            $limit = 4;
+            $start = ($page - 1) * $limit;
+            $get_total_number_of_teacher_by_level = 'SELECT users.names as name, users.email as email, classes.subject as subject FROM users INNER JOIN classes ON users.id = classes.creator_id WHERE classes.level = (SELECT users.academic_level FROM users WHERE users.id = ?) UNION SELECT users.names as name, users.email as email, panda_test_map_2020_03.panda_test_map_2020_03_subject as subject FROM users INNER JOIN panda_test_map_2020_03 ON users.id = panda_test_map_2020_03.panda_test_map_2020_03_creator WHERE panda_test_map_2020_03.panda_test_map_2020_03_academic_level = (SELECT users.academic_level FROM users WHERE users.id = ?)';
+            $get_total_statement = $mysqli->prepare($get_total_number_of_teacher_by_level);
+            $get_total_statement->bind_param('ss', $id, $id);
+            $get_total_statement->execute();
+            $total_number_of_teachers = $get_total_statement->get_result();
+            $get_teacher_by_level = 'SELECT users.names as name, users.email as email, IFNULL((SELECT schools.name FROM schools WHERE schools.id = users.school_affiliated), users.school_affiliated) as school, classes.subject as subject FROM users INNER JOIN classes ON users.id = classes.creator_id WHERE classes.level = (SELECT users.academic_level FROM users WHERE users.id = ?) UNION SELECT users.names as name, users.email as email, IFNULL((SELECT schools.name FROM schools WHERE schools.id = users.school_affiliated), users.school_affiliated) as school, panda_test_map_2020_03.panda_test_map_2020_03_subject as subject FROM users INNER JOIN panda_test_map_2020_03 ON users.id = panda_test_map_2020_03.panda_test_map_2020_03_creator WHERE panda_test_map_2020_03.panda_test_map_2020_03_academic_level = (SELECT users.academic_level FROM users WHERE users.id = ?) LIMIT ?, ?';
+            $statement = $mysqli->prepare($get_teacher_by_level);
+            $statement->bind_param('ssss', $id, $id, $start, $limit);
+            $statement->execute();
+            $teachers = $statement->get_result();
+            $output = array();
+            while ($row_teachers = mysqli_fetch_array($teachers)) {
+                $myarray[] = array(
+                    'name' => $row_teachers[0],
+                    'email' => $row_teachers[1],
+                    'school' => $row_teachers[2],
+                    'subject' => $row_teachers[3]
+                );
+            }
+            $output = array('number' => $total_number_of_teachers->num_rows, 'teachers' => $myarray);
+            echo json_encode($output);
+        }
+    }
+    function sendMail($mysqli)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            require_once "../PHPMailer/src/Creds.php";
+            $parent_id = strip_tags(trim(htmlspecialchars($_POST['parent_id'])));
+            $teachers_email = strip_tags(trim(htmlspecialchars($_POST['teachers_email'])));
+            $get_parents_details = 'SELECT names, email, guardian_tel FROM users WHERE id = ?';
+            $statement = $mysqli->prepare($get_parents_details);
+            $statement->bind_param('s', $parent_id);
+            $statement->execute();
+            $parent = mysqli_fetch_array($statement->get_result());
+            $message = "There is a parent who needs your help for his/her child.\nParent's Number $parent[2]\nParent's email $parent[1]";
+            if (!SendMailv2::mailv2("info@ogeniuspriority.com", $teachers_email, "OGenius Panda parents asking help", $message)) {
+                echo json_encode(array('message' => "Email not sent, please try again later or contant the help desk"));
+            } else {
+                echo json_encode(array('message' => "Email sent"));
+            }
         }
     }
 }
