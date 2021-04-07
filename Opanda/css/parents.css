@@ -51,25 +51,25 @@
 .stats {
   background: #5f605c;
 }
-.choose button {
+.choose .btn {
   background: #a7c5e9;
 }
-.choose button.focus,
-.choose button:hover {
+.choose .btn.focus,
+.choose .btn:hover {
   background: #cfd2d6;
 }
 .stats_container {
   background: #e7efd7;
 }
 
-.time button {
+.time .btn {
   background: #a7c5e9;
 }
-.time button.focus,
-.time button:hover {
+.time .btn.focus,
+.time .btn:hover {
   background: #94999d;
 }
-.time button.last {
+.time .btn.last {
   background: #f7fbff;
 }
 .content {
@@ -79,15 +79,15 @@
 .content_container {
   background: #cfe0f4;
 }
-.pagination button.focus,
-.pagination button:hover {
+.pagination .btn.focus,
+.pagination .btn:hover {
   z-index: 3;
   color: #fff;
   background-color: #007bff;
   border-color: #007bff;
 }
-/* .pagination button.next,
-.pagination button.prev {
+/* .pagination .btn.next,
+.pagination .btn.prev {
   background: #242422;
 } */
 .select2-container--default
@@ -111,4 +111,8 @@
   .select2-selection--multiple
   .select2-selection__rendered::-webkit-scrollbar-thumb {
   background: #8f977d;
+}
+.lastBtns .btn {
+  background-color: #a7c5e9;
+  border-color: #a7c5e9;
 }

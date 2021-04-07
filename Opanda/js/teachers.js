@@ -23,7 +23,7 @@ selectLevel.addEventListener('change', () => {
 });
 const getUnits = (data) => {
   $.ajax({
-    url: '../helpers/units.php',
+    url: '../classes/units.php',
     method: 'post',
     data: data,
     success: (response) => {
@@ -33,7 +33,7 @@ const getUnits = (data) => {
 };
 const getUniqueViews = (data) => {
   $.ajax({
-    url: '../helpers/uniqueViews.php',
+    url: '../classes/uniqueViews.php',
     method: 'post',
     data: data,
     success: (response) => {
@@ -48,7 +48,7 @@ const getUniqueViews = (data) => {
 };
 const getAllViews = (data) => {
   $.ajax({
-    url: '../helpers/allViews.php',
+    url: '../classes/allViews.php',
     method: 'post',
     data: data,
     success: (response) => {
