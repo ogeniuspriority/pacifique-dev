@@ -40,17 +40,28 @@ input[type='radio'] {
 .card_container .number {
   color: #4c5419;
 }
-.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+.select2-container--default
+  .select2-selection--multiple
+  .select2-selection__rendered {
   max-height: 120px !important;
   overflow-y: scroll;
 }
-.select2-container--default .select2-selection--multiple .select2-selection__rendered::-webkit-scrollbar{
+.select2-container--default
+  .select2-selection--multiple
+  .select2-selection__rendered::-webkit-scrollbar {
   width: 5px;
 }
-.select2-container--default .select2-selection--multiple .select2-selection__rendered::-webkit-scrollbar-thumb{
+.select2-container--default
+  .select2-selection--multiple
+  .select2-selection__rendered::-webkit-scrollbar-thumb {
   background: #8f977d;
 }
 @media screen and (max-width: 700px) {
+  .mainDiv {
+    margin: 5px;
+    padding: 5px;
+    min-height: 90vh;
+  }
   /* .type {
     flex-direction: column;
     justify-content: center;

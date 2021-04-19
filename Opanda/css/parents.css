@@ -48,6 +48,9 @@
 .student.focus {
   background: #f2f6fc;
 }
+.student_conteiner .btn {
+  background: #a7c5e9;
+}
 .stats {
   background: #5f605c;
 }

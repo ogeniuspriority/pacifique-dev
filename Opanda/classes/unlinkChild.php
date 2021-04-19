@@ -2,12 +2,12 @@
 
 require_once('../helpers/db.php');
 require_once('../helpers/connect.php');
-class GetChilds extends Connect
+class UnlinkChild extends Connect
 {
     function __construct()
     {
         $db = new DB();
-        $this->getChildren($db->getMysqli());
+        $this->unlinkChild($db->getMysqli());
     }
 }
-$link = new GetChilds();
+$unlink = new UnlinkChild();
