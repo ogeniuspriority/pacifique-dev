@@ -11,9 +11,11 @@ let data = {
   level: 1,
   date: 1,
   activity: 2,
+  teacherId: 951,
   units: [],
 };
 selectSubject.addEventListener('change', () => {
+  document.getElementById('subject_error').innerText = '';
   data.subject = selectSubject.value;
   getUnits(data);
 });
@@ -74,6 +76,7 @@ timeRadioBtns.forEach((btn) => {
   });
 });
 document.querySelector('.filter').addEventListener('click', () => {
+  document.getElementById('subject_error').innerText = '';
   document.querySelectorAll('.summary').forEach((summary) => {
     summary.querySelector('.subject').innerHTML = data.subject || 'Subject';
     summary.querySelector('.level').innerHTML = `Level ${data.level}`;
@@ -82,16 +85,24 @@ document.querySelector('.filter').addEventListener('click', () => {
       summary.querySelector('.units').innerHTML += unit + '<br>';
     });
   });
-  document.querySelector('.unique_students_views').innerHTML =
-    '<div id="spinner" class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
-  document.querySelector('.unique_teachers_views').innerHTML =
-    '<div id="spinner" class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
-  document.querySelector('.all_students_views').innerHTML =
-    '<div id="spinner" class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
-  document.querySelector('.all_teachers_views').innerHTML =
-    '<div id="spinner" class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
-  getUniqueViews(data);
-  getAllViews(data);
+  if (data.subject === '') {
+    document.getElementById('subject_error').innerText =
+      'Select a subject first';
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  } else {
+    window.scrollBy(0, 400);
+    document.querySelector('.unique_students_views').innerHTML =
+      '<div id="spinner" class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+    document.querySelector('.unique_teachers_views').innerHTML =
+      '<div id="spinner" class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+    document.querySelector('.all_students_views').innerHTML =
+      '<div id="spinner" class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+    document.querySelector('.all_teachers_views').innerHTML =
+      '<div id="spinner" class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+    getUniqueViews(data);
+    getAllViews(data);
+  }
 });
 $(document).ready(function () {
   $('.unit').on('select2:select', function (e) {

@@ -9,15 +9,27 @@ class Connect extends DB
         $subjects = $this->mysqli->query($get_subjects_sql);
         return $subjects;
     }
-    function getChildren($parent_id)
+    function getChildren($mysqli)
     {
-        $parent_id = strip_tags(trim(htmlspecialchars($parent_id)));
-        $get_children_sql = 'SELECT * FROM users where id IN (SELECT child_id from panda_link_child_to_parent WHERE parent_id = ?)';
-        $get_children_statement = $this->mysqli->prepare($get_children_sql);
-        $get_children_statement->bind_param('s', $parent_id);
-        $get_children_statement->execute();
-        $children = $get_children_statement->get_result();
-        return $children;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $parent_id = strip_tags(trim(htmlspecialchars($_POST['parentId'])));
+            $parent_id = strip_tags(trim(htmlspecialchars($parent_id)));
+            $get_children_sql = 'SELECT users.id, users.names, IFNULL((SELECT u.names FROM users u WHERE u.id = users.school_affiliated), users.school_affiliated) as school, users.academic_level FROM users where id IN (SELECT child_id from panda_link_child_to_parent WHERE parent_id = ?)';
+            $get_children_statement = $mysqli->prepare($get_children_sql);
+            $get_children_statement->bind_param('s', $parent_id);
+            $get_children_statement->execute();
+            $children = $get_children_statement->get_result();
+            $output = array();
+            while ($child = mysqli_fetch_array($children)) {
+                $output[] = array(
+                    'id' => $child[0],
+                    'name' => $child[1],
+                    'school' => $child[2],
+                    'level' => $child[3]
+                );
+            }
+            echo json_encode($output);
+        }
     }
     function getUnits($mysqli)
     {
@@ -87,6 +99,7 @@ class Connect extends DB
             $selected_level = strip_tags(trim(htmlspecialchars($_POST['level'])));
             $date = strip_tags(trim(htmlspecialchars($_POST['date'])));
             $activity_id = strip_tags(trim(htmlspecialchars($_POST['activity'])));
+            $teacher_id = strip_tags(trim(htmlspecialchars($_POST['teacherId'])));
             $selected_units = isset($_POST['units']) ? $_POST['units'] : [];
             $unique_students = 0;
             $unique_teachers = 0;
@@ -94,13 +107,21 @@ class Connect extends DB
             $fun = new Functions();
             $min_date = $fun->checkDate($date)[0];
             $max_date = $fun->checkDate($date)[1];
-            foreach ($selected_units as $unit) {
-                $unit = strip_tags(trim(htmlspecialchars($unit)));
-                $activity_item = $selected_subject . '_' . $selected_level . '_' . $unit;
+            if (count($selected_units) === 0) {
+                $activity_item = $selected_subject . '_' . $selected_level . '_' . '';
                 $unique_students += $fun->getViews($mysqli, $get_unique_views_query, $activity_item, $min_date, $max_date, $activity_id, 'student');
-                $unique_students += $fun->getViewsById($mysqli, $selected_subject, $selected_level, $unit, $min_date, $max_date, $activity_id, 'student');
+                $unique_students += $fun->getViewsById($mysqli, $selected_subject, $selected_level, '', $teacher_id, $min_date, $max_date, $activity_id, 'student');
                 $unique_teachers += $fun->getViews($mysqli, $get_unique_views_query, $activity_item, $min_date, $max_date, $activity_id, 'teacher');
-                $unique_students += $fun->getViewsById($mysqli, $selected_subject, $selected_level, $unit, $min_date, $max_date, $activity_id, 'teacher');
+                $unique_students += $fun->getViewsById($mysqli, $selected_subject, $selected_level, '', $teacher_id, $min_date, $max_date, $activity_id, 'teacher');
+            } else {
+                foreach ($selected_units as $unit) {
+                    $unit = strip_tags(trim(htmlspecialchars($unit)));
+                    $activity_item = $selected_subject . '_' . $selected_level . '_' . $unit;
+                    $unique_students += $fun->getViews($mysqli, $get_unique_views_query, $activity_item, $min_date, $max_date, $activity_id, 'student');
+                    $unique_students += $fun->getViewsById($mysqli, $selected_subject, $selected_level, $unit, $teacher_id, $min_date, $max_date, $activity_id, 'student');
+                    $unique_teachers += $fun->getViews($mysqli, $get_unique_views_query, $activity_item, $min_date, $max_date, $activity_id, 'teacher');
+                    $unique_students += $fun->getViewsById($mysqli, $selected_subject, $selected_level, $unit, $teacher_id, $min_date, $max_date, $activity_id, 'teacher');
+                }
             }
             echo $unique_students . ',' . $unique_teachers;
         }
@@ -112,6 +133,7 @@ class Connect extends DB
             $selected_level = strip_tags(trim(htmlspecialchars($_POST['level'])));
             $date = strip_tags(trim(htmlspecialchars($_POST['date'])));
             $activity_id = strip_tags(trim(htmlspecialchars($_POST['activity'])));
+            $teacher_id = strip_tags(trim(htmlspecialchars($_POST['teacherId'])));
             $selected_units = isset($_POST['units']) ? $_POST['units'] : [];
             $all_students = 0;
             $all_teachers = 0;
@@ -119,13 +141,20 @@ class Connect extends DB
             $fun = new Functions();
             $min_date = $fun->checkDate($date)[0];
             $max_date = $fun->checkDate($date)[1];
+            if (count($selected_units) === 0) {
+                $activity_item = $selected_subject . '_' . $selected_level . '_' . '';
+                $all_students += $fun->getViews($mysqli, $get_all_views_query, $activity_item, $min_date, $max_date, $activity_id, 'student');
+                $all_students += $fun->getAllViewsById($mysqli, $selected_subject, $selected_level, '', $teacher_id, $min_date, $max_date, $activity_id, 'student');
+                $all_teachers += $fun->getViews($mysqli, $get_all_views_query, $activity_item, $min_date, $max_date, $activity_id, 'teacher');
+                $all_students += $fun->getAllViewsById($mysqli, $selected_subject, $selected_level, '', $teacher_id, $min_date, $max_date, $activity_id, 'teacher');
+            }
             foreach ($selected_units as $unit) {
                 $unit = strip_tags(trim(htmlspecialchars($unit)));
                 $activity_item = $selected_subject . '_' . $selected_level . '_' . $unit;
                 $all_students += $fun->getViews($mysqli, $get_all_views_query, $activity_item, $min_date, $max_date, $activity_id, 'student');
-                $all_students += $fun->getAllViewsById($mysqli, $selected_subject, $selected_level, $unit, $min_date, $max_date, $activity_id, 'student');
+                $all_students += $fun->getAllViewsById($mysqli, $selected_subject, $selected_level, $unit, $teacher_id, $min_date, $max_date, $activity_id, 'student');
                 $all_teachers += $fun->getViews($mysqli, $get_all_views_query, $activity_item, $min_date, $max_date, $activity_id, 'teacher');
-                $all_students += $fun->getAllViewsById($mysqli, $selected_subject, $selected_level, $unit, $min_date, $max_date, $activity_id, 'teacher');
+                $all_students += $fun->getAllViewsById($mysqli, $selected_subject, $selected_level, $unit, $teacher_id, $min_date, $max_date, $activity_id, 'teacher');
             }
             echo $all_students . ',' . $all_teachers;
         }
@@ -182,7 +211,7 @@ class Connect extends DB
                 echo json_encode($output);
                 exit();
             }
-            $create_parent_child_link_sql = 'INSERT INTO panda_link_child_to_parent (child_id, parent_id) VALUES ((SELECT users.id from users INNER JOIN userreferall ON users.id = userreferall.user_id WHERE userreferall.referal_code = ?), ?)';
+            $create_parent_child_link_sql = 'INSERT INTO panda_link_child_to_parent (child_id, parent_id) VALUES ((SELECT users.id from users INNER JOIN userreferall ON users.id = userreferall.user_id WHERE userreferall.referal_code = ? AND users.user_type = "student"), ?)';
             $statement = $mysqli->prepare($create_parent_child_link_sql);
             $statement->bind_param('ss', $child_ReferalId, $parent_id);
             $statement->execute();
@@ -194,11 +223,23 @@ class Connect extends DB
             echo json_encode($output);
         }
     }
+    function unlinkChild($mysqli)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = strip_tags(trim(htmlspecialchars($_POST['id'])));
+            $parent_id = strip_tags(trim(htmlspecialchars($_POST['parent_id'])));
+            $delete_child_parent_link = 'DELETE FROM panda_link_child_to_parent WHERE child_id = ? AND parent_id = ?';
+            $statement = $mysqli->prepare($delete_child_parent_link);
+            $statement->bind_param('ss', $id, $parent_id);
+            $statement->execute();
+            echo json_encode(array('message' =>  'Child unlinked successfully'));
+        }
+    }
     function getScheduledClasses($mysqli)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = strip_tags(trim(htmlspecialchars($_POST['id'])));
-            $get_scheduled_classes = 'SELECT onlineclass.title, onlineclass.schedule FROM onlineclass INNER JOIN coursestructure ON onlineclass.unit_id = coursestructure.id WHERE coursestructure.level = (SELECT users.academic_level FROM users WHERE users.id = ?) AND onlineclass.schedule > NOW()';
+            $get_scheduled_classes = 'SELECT onlineclass.title, onlineclass.schedule, coursestructure.subject, coursestructure.level, coursestructure.units FROM onlineclass INNER JOIN coursestructure ON onlineclass.unit_id = coursestructure.id WHERE coursestructure.level = (SELECT users.academic_level FROM users WHERE users.id = ?) AND onlineclass.schedule > NOW()';
             $statement = $mysqli->prepare($get_scheduled_classes);
             $statement->bind_param('s', $id);
             $statement->execute();
@@ -207,7 +248,10 @@ class Connect extends DB
             while ($row_classe = mysqli_fetch_array($classes)) {
                 $output[] = array(
                     'title' => $row_classe[0],
-                    'date' => $row_classe[1]
+                    'date' => $row_classe[1],
+                    'subject' => $row_classe[2],
+                    'level' => $row_classe[3],
+                    'unit' => $row_classe[4]
                 );
             }
             echo json_encode($output);
@@ -216,18 +260,18 @@ class Connect extends DB
     function getTeachersHelp($mysqli)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = strip_tags(trim(htmlspecialchars($_POST['id'])));
+            $id = strip_tags(trim(htmlspecialchars('11')));
             $page = strip_tags(trim(htmlspecialchars($_POST['page'])));
             $limit = 4;
             $start = ($page - 1) * $limit;
-            $get_total_number_of_teacher_by_level = 'SELECT users.names as name, users.email as email, classes.subject as subject FROM users INNER JOIN classes ON users.id = classes.creator_id WHERE classes.level = (SELECT users.academic_level FROM users WHERE users.id = ?) UNION SELECT users.names as name, users.email as email, panda_test_map_2020_03.panda_test_map_2020_03_subject as subject FROM users INNER JOIN panda_test_map_2020_03 ON users.id = panda_test_map_2020_03.panda_test_map_2020_03_creator WHERE panda_test_map_2020_03.panda_test_map_2020_03_academic_level = (SELECT users.academic_level FROM users WHERE users.id = ?)';
+            $get_total_number_of_teacher_by_level = 'SELECT users.names as name, users.email as email, IFNULL((SELECT u.names FROM users u WHERE u.id = users.school_affiliated), users.school_affiliated) as school, classes.subject as subject FROM users INNER JOIN classes ON users.id = classes.creator_id WHERE classes.level = (SELECT users.academic_level FROM users WHERE users.id = ?) UNION SELECT users.names as name, users.email as email, IFNULL((SELECT u.names FROM users u WHERE u.id = users.school_affiliated), users.school_affiliated) as school, panda_test_map_2020_03.panda_test_map_2020_03_subject as subject FROM users INNER JOIN panda_test_map_2020_03 ON users.id = panda_test_map_2020_03.panda_test_map_2020_03_creator WHERE panda_test_map_2020_03.panda_test_map_2020_03_academic_level = (SELECT users.academic_level FROM users WHERE users.id = ?) UNION SELECT users.names as name, users.email as email, IFNULL((SELECT u.names FROM users u WHERE u.id = users.school_affiliated), users.school_affiliated) as school, coursestructure.subject as subject FROM users INNER JOIN onlineclass ON users.id = onlineclass.creator_id INNER JOIN coursestructure ON onlineclass.unit_id = coursestructure.id WHERE coursestructure.level = (SELECT users.academic_level FROM users WHERE users.id = ?) UNION SELECT users.names as name, users.email as email, IFNULL((SELECT u.names FROM users u WHERE u.id = users.school_affiliated), users.school_affiliated) as school, "" as subject FROM users INNER JOIN forumquestions ON users.id = forumquestions.user_id WHERE users.user_type = "teacher"';
             $get_total_statement = $mysqli->prepare($get_total_number_of_teacher_by_level);
-            $get_total_statement->bind_param('ss', $id, $id);
+            $get_total_statement->bind_param('sss', $id, $id, $id);
             $get_total_statement->execute();
             $total_number_of_teachers = $get_total_statement->get_result();
-            $get_teacher_by_level = 'SELECT users.names as name, users.email as email, IFNULL((SELECT schools.name FROM schools WHERE schools.id = users.school_affiliated), users.school_affiliated) as school, classes.subject as subject FROM users INNER JOIN classes ON users.id = classes.creator_id WHERE classes.level = (SELECT users.academic_level FROM users WHERE users.id = ?) UNION SELECT users.names as name, users.email as email, IFNULL((SELECT schools.name FROM schools WHERE schools.id = users.school_affiliated), users.school_affiliated) as school, panda_test_map_2020_03.panda_test_map_2020_03_subject as subject FROM users INNER JOIN panda_test_map_2020_03 ON users.id = panda_test_map_2020_03.panda_test_map_2020_03_creator WHERE panda_test_map_2020_03.panda_test_map_2020_03_academic_level = (SELECT users.academic_level FROM users WHERE users.id = ?) LIMIT ?, ?';
+            $get_teacher_by_level = 'SELECT users.names as name, users.email as email, IFNULL((SELECT u.names FROM users u WHERE u.id = users.school_affiliated), users.school_affiliated) as school, classes.subject as subject FROM users INNER JOIN classes ON users.id = classes.creator_id WHERE classes.level = (SELECT users.academic_level FROM users WHERE users.id = ?) UNION SELECT users.names as name, users.email as email, IFNULL((SELECT u.names FROM users u WHERE u.id = users.school_affiliated), users.school_affiliated) as school, panda_test_map_2020_03.panda_test_map_2020_03_subject as subject FROM users INNER JOIN panda_test_map_2020_03 ON users.id = panda_test_map_2020_03.panda_test_map_2020_03_creator WHERE panda_test_map_2020_03.panda_test_map_2020_03_academic_level = (SELECT users.academic_level FROM users WHERE users.id = ?) UNION SELECT users.names as name, users.email as email, IFNULL((SELECT u.names FROM users u WHERE u.id = users.school_affiliated), users.school_affiliated) as school, coursestructure.subject as subject FROM users INNER JOIN onlineclass ON users.id = onlineclass.creator_id INNER JOIN coursestructure ON onlineclass.unit_id = coursestructure.id WHERE coursestructure.level = (SELECT users.academic_level FROM users WHERE users.id = ?) UNION SELECT users.names as name, users.email as email, IFNULL((SELECT u.names FROM users u WHERE u.id = users.school_affiliated), users.school_affiliated) as school, "" as subject FROM users INNER JOIN forumquestions ON users.id = forumquestions.user_id WHERE users.user_type = "teacher" LIMIT ?, ?';
             $statement = $mysqli->prepare($get_teacher_by_level);
-            $statement->bind_param('ssss', $id, $id, $start, $limit);
+            $statement->bind_param('sssss', $id, $id, $id, $start, $limit);
             $statement->execute();
             $teachers = $statement->get_result();
             $output = array();

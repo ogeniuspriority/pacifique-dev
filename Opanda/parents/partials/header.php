@@ -32,8 +32,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Child's ReferalID</label>
-                        <input id="refId" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Referal ID of the child you want to link">
+                        <label for="exampleInputEmail1">Student’s O’Genius Panda ID</label>
+                        <input id="refId" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="O’Genius Panda Student’s ID of the child you want to link">
                         <p id="link_message" class="p-1"></p>
                     </div>
                 </div>

@@ -2,30 +2,17 @@
 $title = 'OPANDA | PARENT';
 $style = '../css/parents.css';
 require_once("partials/header.php");
-require_once('../helpers/connect.php');
-$con = new Connect();
-$subjects = $con->getSubjects();
-$children = $con->getChildren('922');
 ?>
-<div class="mainDiv d-flex m-2 p-2 rounded">
-    <div class="students w-25 rounded p-1 m-1 vh-100 overflow-scroll overflow-scroll">
-        <?php
-        while ($row_children = mysqli_fetch_array($children)) {
-            echo "<div class='student rounded mx-1 my-2 p-1 rounded m-1 p-1'>
-                    <input type='hidden' class='user_id' value=$row_children[0] />
-                    <p>Names: $row_children[1]</p>
-                    <p>School: $row_children[8]</p>
-                    <p>Level: Senior $row_children[11]</p>
-                </div>";
-        }
-        ?>
+<div class="mainDiv row m-2 p-2 rounded">
+    <div class="col-md-2 students rounded p-1 m-1 vh-md-100 overflow-scroll">
+
     </div>
-    <div class="stats rounded p-2 m-2 w-100">
-        <div class="choose">
-            <button class="statsBtn focus btn px-4 py-1 m-2">Forum</button>
-            <button class="statsBtn btn px-4 py-1 m-2">Reading</button>
-            <button class="statsBtn btn px-4 py-1 m-2">Simulations</button>
-            <div class="dropdown d-inline-block">
+    <div class="col-md stats rounded p-2 m-1">
+        <div class="row choose justify-content-center justify-content-xl-start">
+            <button class="col-md-2 col-10 statsBtn focus btn px-4 py-1 m-md-3 m-1">Forum</button>
+            <button class="col-md-2 col-10 statsBtn btn px-4 py-1 m-md-3 m-1">Reading</button>
+            <button class="col-md-2 col-10 statsBtn btn px-4 py-1 m-md-3 m-1">Simulations</button>
+            <div class="col-md-2 dropdown d-inline-block m-2">
                 <button class="btn dropdown-toggle px-4 py-1 m-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     More...
                 </button>
@@ -38,28 +25,31 @@ $children = $con->getChildren('922');
                     <p class="statsBtn dropdown-item">Renew Payment</p>
                     <p class="statsBtn dropdown-item">Online Classes</p>
                     <p class="statsBtn dropdown-item">General Tests</p>
+                    <p class="statsBtn dropdown-item">Evaluation Tests</p>
                 </div>
             </div>
         </div>
-        <div class="stats_container rounded mt-2 p-2">
+        <div class="stats_container rounded mt-2 p-1">
             <div class="time">
-                <button class="date_btns focus btn rounded px-2 py-1 m-2">All the time</button>
-                <button class="date_btns btn rounded px-2 py-1 m-2">This year</button>
-                <button class="date_btns btn rounded px-2 py-1 m-2">This month</button>
-                <button class="date_btns btn rounded px-2 py-1 m-2">this week</button>
-                <button class="date_btns btn rounded px-2 py-1 m-2">Yesterday</button>
-                <button class="date_btns btn rounded px-2 py-1 m-2">Today</button>
-                <input id="picker" type="date" class="btn bg-white">
+                <button class="date_btns focus btn rounded px-2 py-1 m-1">All the time</button>
+                <button class="date_btns btn rounded px-2 py-1 m-1">This year</button>
+                <button class="date_btns btn rounded px-2 py-1 m-1">This month</button>
+                <button class="date_btns btn rounded px-2 py-1 m-1">this week</button>
+                <button class="date_btns btn rounded px-2 py-1 m-1">Yesterday</button>
+                <button class="date_btns btn rounded px-2 py-1 m-1">Today</button>
+                <div class="py-1 m-1">
+                    <input id="picker" type="date" class="btn bg-white">
+                </div>
             </div>
-            <div class="total w-25 text-center bg-white rounded px-3 py-1 m-2">Total: 0</div>
+            <div class="total d-inline text-center bg-white rounded px-3 py-1 m-1">Total: 0</div>
             <div class="d-flex justify-content-center">
                 <div id="spinner" class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
-            <div class="content rounded p-2 m-2 d-flex">
-                <div id="content" class="w-50"></div>
-                <div id="chart_area" class="m-1 w-50"></div>
+            <div class="content rounded p-1 m-1 row">
+                <div id="content" class="col-md-4 p-0"></div>
+                <div id="chart_area" class="col-md-8 p-1"></div>
             </div>
             <div id="pagination" aria-label="Page navigation example">
             </div>
