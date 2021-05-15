@@ -1,8 +1,3 @@
-<?php
-require_once('../helpers/connect.php');
-$con = new Connect();
-$subjects = $con->getSubjects();
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,11 +19,6 @@ $subjects = $con->getSubjects();
                 <label for="subject">Subject</label>
                 <select class="form-control" id="subject" name="subject">
                     <option value="">SELECT</option>
-                    <?php
-                    while ($row_subject = mysqli_fetch_array($subjects)) {
-                        echo "<option value='$row_subject[0]'>$row_subject[0]</option>";
-                    }
-                    ?>
                 </select>
                 <small id="subject_error" class="text-danger"></small>
             </div>
@@ -154,9 +144,6 @@ $subjects = $con->getSubjects();
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
-    <script>
-
-    </script>
     <script defer src="../js/teachers.js"></script>
 </body>
 
