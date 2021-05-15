@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 const getChildren = (parentId) => {
   $.ajax({
-    url: '../classes/getChilds.php',
+    url: '../classes/parents/getChilds.php',
     method: 'post',
     data: { parentId },
     dataType: 'JSON',
@@ -170,7 +170,7 @@ const prevNextHandler = (action) => {
 };
 const getStudentStatistics = (data) => {
   $.ajax({
-    url: '../classes/studentStats.php',
+    url: '../classes/parents/studentStats.php',
     method: 'post',
     data: data,
     success: (response) => {
@@ -185,7 +185,7 @@ const getStudentStatistics = (data) => {
 const loadChart = (data) => {
   document.getElementById('chart_area').innerText = '';
   $.ajax({
-    url: '../classes/drawChart.php',
+    url: '../classes/parents/drawChart.php',
     method: 'post',
     data: data,
     dataType: 'JSON',
@@ -216,7 +216,7 @@ const drawChart = (chartData) => {
 };
 document.getElementById('linkBtn').addEventListener('click', () => {
   $.ajax({
-    url: '../classes/linkChildParent.php',
+    url: '../classes/parents/linkChildParent.php',
     method: 'post',
     data: {
       child_referal_id: document.getElementById('refId').value,
@@ -245,7 +245,7 @@ document
   .getElementById('view_scheduled_classes')
   .addEventListener('click', () => {
     $.ajax({
-      url: '../classes/scheduledClasses.php',
+      url: '../classes/parents/scheduledClasses.php',
       method: 'post',
       data: {
         id: studentStatsData.id,
@@ -269,7 +269,7 @@ document
 const getTeachersHelpData = { id: studentStatsData.id, page: 1 };
 const getTeacherHelp = (data) => {
   $.ajax({
-    url: '../classes/teachersByLevel.php',
+    url: '../classes/parents/teachersByLevel.php',
     method: 'post',
     data: data,
     dataType: 'JSON',
@@ -343,7 +343,7 @@ const modalPrevNextHandler = (action) => {
 };
 const sendMail = (index, email) => {
   $.ajax({
-    url: '../classes/sendMail.php',
+    url: '../classes/parents/sendMail.php',
     method: 'post',
     data: {
       parent_id: parent_id,
@@ -361,7 +361,7 @@ const sendMail = (index, email) => {
 };
 const unlinkChild = (id, parentId) => {
   $.ajax({
-    url: '../classes/unlinkChild.php',
+    url: '../classes/parents/unlinkChild.php',
     method: 'post',
     data: {
       id: id,

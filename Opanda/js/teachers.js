@@ -4,6 +4,20 @@ $(document).ready(function () {
     multiple: true,
   });
 });
+document.addEventListener('DOMContentLoaded', () => {
+  getSubjects();
+});
+const getSubjects = () => {
+  $.ajax({
+    url: '../classes/teachers/subjects.php',
+    method: 'post',
+    data: {},
+    success: (response) => {
+      document.getElementById('subject').innerHTML = '<option>SELECT</option>';
+      document.getElementById('subject').innerHTML += response;
+    },
+  });
+};
 const selectSubject = document.getElementById('subject');
 const selectLevel = document.getElementById('level');
 let data = {
@@ -25,7 +39,7 @@ selectLevel.addEventListener('change', () => {
 });
 const getUnits = (data) => {
   $.ajax({
-    url: '../classes/units.php',
+    url: '../classes/teachers/units.php',
     method: 'post',
     data: data,
     success: (response) => {
@@ -35,7 +49,7 @@ const getUnits = (data) => {
 };
 const getUniqueViews = (data) => {
   $.ajax({
-    url: '../classes/uniqueViews.php',
+    url: '../classes/teachers/uniqueViews.php',
     method: 'post',
     data: data,
     success: (response) => {
@@ -50,7 +64,7 @@ const getUniqueViews = (data) => {
 };
 const getAllViews = (data) => {
   $.ajax({
-    url: '../classes/allViews.php',
+    url: '../classes/teachers/allViews.php',
     method: 'post',
     data: data,
     success: (response) => {

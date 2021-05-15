@@ -10,7 +10,7 @@ class DB
     // method declaration
     function __construct()
     {
-        $this->db = 'opanda_test';
+        $this->db = 'opanda_test_v2';
         $this->user = "root";
         $this->pass = "";
 
