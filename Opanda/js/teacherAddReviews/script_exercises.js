@@ -70,11 +70,6 @@ document.getElementById('unit_ex').addEventListener('change', () => {
 let contentIdEx = null,
   totalPaginationPagesExercises = 0;
 const filterExercises = (dataEx) => {
-  if (document.querySelector('.pagination')) {
-    document
-      .getElementById('pagination_ex')
-      .removeChild(document.querySelector('.pagination'));
-  }
   contentIdEx = null;
   totalPaginationPagesExercises = 0;
   const wrapperElement = document.getElementById('wrapper_exercises');
@@ -95,25 +90,19 @@ const filterExercises = (dataEx) => {
         totalPaginationPagesExercises = response[0].totalPages;
         response.forEach((res) => {
           const ele = `
-        <div class="card mb-1 sidebar-card-color">
-          <div class="card-body p-2">
-              <div class="d-flex justify-content-between mb-1">
-                  <span class="fw-bold">Topic:</span>
-                  <span class="text-end"> ${res.subject} Level ${res.level} ${
+        <div class="mb-3 pb-2 border-bottom border-secondary">
+          <div class="d-flex flex-column p-2 mx-3">
+            <strong class="mb-2 h3"> ${res.subject} Level ${res.level} ${
             res.units.split(':')[0]
+          }</strong>
+            <span class="mb-2"> ${res.summary.substring(0, 50)}${
+            res.summary.length > 50 ? '...' : ''
           }</span>
-              </div>
-              <div class="d-flex justify-content-between mb-1">
-                  <span class="fw-bold">Summary:</span>
-                  <span class="text-end"> ${res.summary.substring(0, 40)}${
-            res.summary.length > 40 ? '...' : ''
-          }</span>
-              </div>
-              <div class="text-center">
-                <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContentExercises(${
-                  res.id
-                })">Add Feedback</button>
-              <div>
+            <div class="text-start">
+              <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContentExercises(${
+                res.id
+              })">Add Feedback</button>
+            <div>
           </div>
         </div>`;
           wrapperElement.innerHTML += ele;
@@ -165,7 +154,7 @@ const dispalyContentExercises = (id) => {
         }</label>
           </div>
           <div class="">
-            <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#questionModal" onclick='optionAddReview(${JSON.stringify(
+            <button type="button" class="btn input-color btn-sm" data-toggle="modal" data-target="#questionModal" onclick='optionAddReview(${JSON.stringify(
               answer
             )})'>Add your review</button>
           </div>
@@ -182,9 +171,8 @@ document.getElementById('question_add_review').addEventListener('click', () => {
   document.getElementById('all_comments_ex').innerHTML = '';
   document.getElementById('message_ex').innerHTML = '';
   document.getElementById('ex_type').innerHTML = 'Question';
-  document.getElementById('add_review__el').innerHTML = document.getElementById(
-    'question'
-  ).innerHTML;
+  document.getElementById('add_review__el').innerHTML =
+    document.getElementById('question').innerHTML;
 });
 document
   .getElementById('explanation_add_review')
@@ -193,9 +181,8 @@ document
     document.getElementById('all_comments_ex').innerHTML = '';
     document.getElementById('message_ex').innerHTML = '';
     document.getElementById('ex_type').innerHTML = 'Explanation';
-    document.getElementById(
-      'add_review__el'
-    ).innerHTML = document.getElementById('explanation').innerHTML;
+    document.getElementById('add_review__el').innerHTML =
+      document.getElementById('explanation').innerHTML;
   });
 const optionAddReview = (answer) => {
   contentLinkId = answer.id;
@@ -244,70 +231,10 @@ document.getElementById('send_comment_ex').addEventListener('click', () => {
 const generatePagesExercises = (total, page) => {
   if (total > 5) {
     const pages = Math.ceil(total / 5);
-    if (pages <= 5) {
-      let pageBtns = '';
-      for (let i = 1; i <= pages; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandlerExercises(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandlerExercises(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination_ex'
-      ).innerHTML = `<ul class="pagination justify-content-center">
-                <li class="page-item" onclick="prevNextHandlerExercises('prev')">
-                    <button class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </button>
-                </li>
-                ${pageBtns}
-                <li class="page-item" onclick="prevNextHandlerExercises('next')">
-                    <button class="page-link" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </button>
-                </li>
-            </ul>`;
-    } else {
-      let pageBtns = '';
-      for (let i = 1; i < 4; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandlerExercises(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandlerExercises(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination_ex'
-      ).innerHTML = `<ul class="pagination justify-content-center">
-                <li class="page-item" onclick="prevNextHandlerExercises('prev')">
-                    <button class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </button>
-                </li>
-                ${pageBtns}
-                <li class="page-item">
-                    <button class="page-link" aria-label="Next">
-                        <span aria-hidden="true">...</span>
-                    </button>
-                </li>
-                <li class="page-item" onclick="prevNextHandlerExercises('next')">
-                    <button class="page-link" aria-label="Next">
-                        <span aria-hidden="true">${pages}</span>
-                    </button>
-                </li>
-                <li class="page-item" onclick="prevNextHandlerExercises('next')">
-                    <button class="page-link" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </button>
-                </li>
-            </ul>`;
-    }
+    document.getElementById(
+      'pagination_ex'
+    ).innerHTML = `<span class="btn" onclick="prevNextHandlerExercises('prev')"><i class="fas fa-step-backward"></i></span> ${page} of ${pages}<span class="btn" onclick="prevNextHandlerExercises('next')"><i class="fas fa-step-forward"></i></span>`;
   }
-};
-const changePageHandlerExercises = (page) => {
-  dataExercises.infoPage = page;
-  filterExercises(dataExercises);
 };
 const prevNextHandlerExercises = (action) => {
   if (

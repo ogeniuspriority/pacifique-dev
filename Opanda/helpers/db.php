@@ -10,9 +10,9 @@ class DB
     // method declaration
     function __construct()
     {
-        $this->db = 'opanda_test_v2';
-        $this->user = "root";
-        $this->pass = "";
+        $this->db = 'opanda';
+        $this->user = "panda_lab_";
+        $this->pass = "@Panda_@";
 
         $this->mysqli = new mysqli($this->host, $this->user, $this->pass, $this->db) or die($this->mysqli->error);
     }

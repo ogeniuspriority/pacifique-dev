@@ -67,11 +67,6 @@ $(document).ready(function () {
 let contentId = null,
   totalPaginationPages = 0;
 const filterCourses = (data) => {
-  if (document.querySelector('.pagination')) {
-    document
-      .getElementById('pagination')
-      .removeChild(document.querySelector('.pagination'));
-  }
   contentId = null;
   const wrapperElement = document.getElementById('wrapper');
   wrapperElement.innerHTML = `
@@ -91,23 +86,14 @@ const filterCourses = (data) => {
         totalPaginationPages = response[0].totalPages;
         response.forEach((res) => {
           const ele = `
-          <div class="card mb-1 sidebar-card-color">
-            <div class="card-body p-2">
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold">Name:</span>
-                    <span class="text-end">${res.name}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold">Subject:</span>
-                    <span class="text-end">${res.subject}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold">Units:</span>
-                    <span class="text-end">${res.units}</span>
-                </div>
-                <div class="text-center">
-                  <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContent(${res.id})">Add Feedback</button>
-                </div>
+          <div class="mb-3 pb-2 border-bottom border-secondary">
+            <div class="d-flex flex-column p-2 mx-3">
+              <strong class="mb-2 h3">${res.name}</strong>
+              <span class="mb-2">${res.subject}</span>
+              <span class="mb-2">${res.units}</span>
+              <div class="text-start">
+                <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContent(${res.id})">Add Feedback</button>
+              </div>
             </div>
           </div>`;
           wrapperElement.innerHTML += ele;
@@ -145,19 +131,21 @@ const dispalyContent = (id) => {
     dataType: 'JSON',
     success: (response) => {
       const contentElement = document.getElementById('content');
-      const addReviewContentElement = document.getElementById(
-        'add_review_content'
-      );
+      const addReviewContentElement =
+        document.getElementById('add_review_content');
       contentElement.innerHTML = '';
       addReviewContentElement.innerHTML = '';
       contentElement.innerHTML += response.html_content;
       addReviewContentElement.innerHTML += response.html_content;
       const pagesElement = document.getElementById('pages');
+      const pagesElement_1 = document.getElementById('pages_1');
       pagesElement.innerHTML = '<option>SELECT</option>';
+      pagesElement_1.innerHTML = '<option>SELECT</option>';
       totalPages = response.pages.length;
       response.pages.forEach((page, index) => {
         const option = `<option value="${page}">Page ${index + 1}</option>`;
         pagesElement.innerHTML += option;
+        pagesElement_1.innerHTML += option;
       });
       document.getElementById('modalPageNumber').innerHTML = 'Summary';
     },
@@ -177,9 +165,8 @@ const getPageContent = (id) => {
     dataType: 'JSON',
     success: (response) => {
       const contentElement = document.getElementById('content');
-      const addReviewContentElement = document.getElementById(
-        'add_review_content'
-      );
+      const addReviewContentElement =
+        document.getElementById('add_review_content');
       contentElement.innerHTML = '';
       addReviewContentElement.innerHTML = '';
       contentElement.innerHTML += response;
@@ -199,22 +186,49 @@ document.getElementById('pages').addEventListener('change', (e) => {
     .getElementById('pages')
     .options[document.getElementById('pages').selectedIndex].text.split(' ')[1];
   current.id = e.target.value;
+  document.getElementById('pages_1').selectedIndex =
+    document.getElementById('pages').selectedIndex;
   getPageContent(e.target.value);
 });
-document.getElementById('previous').addEventListener('click', () => {
-  if (current.page > 1) {
-    document.getElementById('pages').selectedIndex--;
-    var event = new Event('change');
-    document.getElementById('pages').dispatchEvent(event);
-  }
+document.getElementById('pages_1').addEventListener('change', (e) => {
+  current.page = document
+    .getElementById('pages_1')
+    .options[document.getElementById('pages_1').selectedIndex].text.split(
+      ' '
+    )[1];
+  document.getElementById('pages').selectedIndex =
+    document.getElementById('pages_1').selectedIndex;
+  current.id = e.target.value;
+  getPageContent(e.target.value);
 });
-document.getElementById('next').addEventListener('click', () => {
-  if (current.page < totalPages) {
-    document.getElementById('pages').selectedIndex++;
-    var event = new Event('change');
-    document.getElementById('pages').dispatchEvent(event);
+Array.prototype.forEach.call(
+  document.getElementsByClassName('prev-page-courses'),
+  (btn) => {
+    btn.addEventListener('click', () => {
+      if (current.page > 1) {
+        document.getElementById('pages').selectedIndex--;
+        document.getElementById('pages_1').selectedIndex--;
+        var event = new Event('change');
+        document.getElementById('pages').dispatchEvent(event);
+        document.getElementById('pages_1').dispatchEvent(event);
+      }
+    });
   }
-});
+);
+Array.prototype.forEach.call(
+  document.getElementsByClassName('next-page-courses'),
+  (btn) => {
+    btn.addEventListener('click', () => {
+      if (current.page < totalPages) {
+        document.getElementById('pages').selectedIndex++;
+        document.getElementById('pages_1').selectedIndex++;
+        var event = new Event('change');
+        document.getElementById('pages').dispatchEvent(event);
+        document.getElementById('pages_1').dispatchEvent(event);
+      }
+    });
+  }
+);
 const all_comments_element = document.getElementById('all_comments');
 let all_comments = '';
 document.getElementById('add_comment').addEventListener('click', () => {
@@ -253,70 +267,10 @@ document.getElementById('send_comment').addEventListener('click', () => {
 const generatePages = (total, page) => {
   if (total > 5) {
     const pages = Math.ceil(total / 5);
-    if (pages <= 5) {
-      let pageBtns = '';
-      for (let i = 1; i <= pages; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandler(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandler(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination'
-      ).innerHTML = `<ul class="pagination justify-content-center">
-                <li class="page-item" onclick="prevNextHandler('prev')">
-                    <button class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </button>
-                </li>
-                ${pageBtns}
-                <li class="page-item" onclick="prevNextHandler('next')">
-                    <button class="page-link" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </button>
-                </li>
-            </ul>`;
-    } else {
-      let pageBtns = '';
-      for (let i = 1; i < 4; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandler(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandler(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination'
-      ).innerHTML = `<ul class="pagination justify-content-center">
-                <li class="page-item" onclick="prevNextHandler('prev')">
-                    <button class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </button>
-                </li>
-                ${pageBtns}
-                <li class="page-item">
-                    <button class="page-link" aria-label="Next">
-                        <span aria-hidden="true">...</span>
-                    </button>
-                </li>
-                <li class="page-item" onclick="prevNextHandler('next')">
-                    <button class="page-link" aria-label="Next">
-                        <span aria-hidden="true">${pages}</span>
-                    </button>
-                </li>
-                <li class="page-item" onclick="prevNextHandler('next')">
-                    <button class="page-link" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </button>
-                </li>
-            </ul>`;
-    }
+    document.getElementById(
+      'pagination'
+    ).innerHTML = `<span class="btn" onclick="prevNextHandler('prev')"><i class="fas fa-step-backward"></i></span> ${page} of ${pages}<span class="btn" onclick="prevNextHandler('next')"><i class="fas fa-step-forward"></i></span>`;
   }
-};
-const changePageHandler = (page) => {
-  data.infoPage = page;
-  filterCourses(data);
 };
 const prevNextHandler = (action) => {
   if (

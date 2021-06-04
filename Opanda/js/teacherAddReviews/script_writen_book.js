@@ -15,6 +15,7 @@ $.ajax({
 const data_book = {
   subject: '',
   level: '1',
+  infoPage: 1,
 };
 document.getElementById('subject_book').addEventListener('change', () => {
   data_book.subject = document.getElementById('subject_book').value;
@@ -22,8 +23,9 @@ document.getElementById('subject_book').addEventListener('change', () => {
 document.getElementById('level_book').addEventListener('change', () => {
   data_book.level = document.getElementById('level_book').value;
 });
-let contentIdBook = null;
-document.getElementById('filter_book').addEventListener('click', () => {
+let contentIdBook = null,
+  totalPaginationPagesBooks = 0;
+const filterBook = () => {
   contentIdBook = null;
   const wrapperElement = document.getElementById('wrapper_book');
   wrapperElement.innerHTML = `
@@ -40,29 +42,24 @@ document.getElementById('filter_book').addEventListener('click', () => {
     success: (response) => {
       wrapperElement.innerHTML = '';
       if (response.length !== 0) {
+        totalPaginationPagesBooks = response[0].totalBooks;
         response.forEach((res) => {
           const ele = `
-        <div class="card mb-1 p-2 sidebar-card-color">
-          <div class="card-body p-0">
-              <div class="d-flex justify-content-between mb-1">
-                  <span class="fw-bold">Name:</span>
-                  <span class="text-end">${res.name}</span>
-              </div>
-              <div class="d-flex justify-content-between mb-1">
-                  <span class="fw-bold">Subject:</span>
-                  <span class="text-end">${res.subject}</span>
-              </div>
-              <div class="d-flex justify-content-between mb-1">
-                  <span class="fw-bold">Level:</span>
-                  <span class="text-end">${res.level}</span>
-              </div>
-              <div class="text-center">
-                <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContentBook(${res.id})">Add Feedback</button>
-              </div>
+        <div class="mb-3 pb-2 border-bottom border-secondary">
+          <div class="d-flex flex-column p-2 mx-3">
+            <strong class="mb-2 h3">${res.name}</strong>
+            <span class="mb-2">${res.subject}</span>
+            <span class="mb-2">Level ${res.level}</span>
+            <div class="text-start">
+              <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContentBook(${res.id})">Add Feedback</button>
+            </div>
           </div>
         </div>`;
           wrapperElement.innerHTML += ele;
-        });
+        });generatePagesBook(
+          totalPaginationPagesBooks,
+          data_book.infoPage
+        );
       } else {
         wrapperElement.innerHTML = `
         <div class="card sidebar-card-color">
@@ -73,7 +70,10 @@ document.getElementById('filter_book').addEventListener('click', () => {
       }
     },
   });
-});
+};
+document
+  .getElementById('filter_book')
+  .addEventListener('click', () => filterBook());
 let bookCurrent = { page: 0, id: 0 },
   bookTotalPages = 0;
 const dispalyContentBook = (id) => {
@@ -96,11 +96,14 @@ const dispalyContentBook = (id) => {
       contentElement.innerHTML += response.summary;
       addReviewContentElement.innerHTML += response.summary;
       const pagesElement = document.getElementById('pages_book');
+      const pagesElement_1 = document.getElementById('pages_book_1');
       pagesElement.innerHTML = '<option>SELECT</option>';
+      pagesElement_1.innerHTML = '<option>SELECT</option>';
       bookTotalPages = response.pages.length;
       response.pages.forEach((page, index) => {
         const option = `<option value="${page}">Page ${index + 1}</option>`;
         pagesElement.innerHTML += option;
+        pagesElement_1.innerHTML += option;
       });
       document.getElementById('modalPageNumberBook').innerHTML = 'Summary';
       window.scrollTo(0, document.body.scrollHeight);
@@ -145,23 +148,50 @@ document.getElementById('pages_book').addEventListener('change', (e) => {
       ' '
     )[1];
   bookCurrent.id = e.target.value;
+  document.getElementById('pages_book_1').selectedIndex =
+    document.getElementById('pages_book').selectedIndex;
+  getBookPageContent(e.target.value);
+});
+document.getElementById('pages_book_1').addEventListener('change', (e) => {
+  bookCurrent.page = document
+    .getElementById('pages_book_1')
+    .options[document.getElementById('pages_book_1').selectedIndex].text.split(
+      ' '
+    )[1];
+  bookCurrent.id = e.target.value;
+  document.getElementById('pages_book').selectedIndex =
+    document.getElementById('pages_book_1').selectedIndex;
   getBookPageContent(e.target.value);
 });
 
-document.getElementById('previous_book').addEventListener('click', () => {
-  if (bookCurrent.page > 1) {
-    document.getElementById('pages_book').selectedIndex--;
-    var event = new Event('change');
-    document.getElementById('pages_book').dispatchEvent(event);
+Array.prototype.forEach.call(
+  document.getElementsByClassName('prev-page-books'),
+  (btn) => {
+    btn.addEventListener('click', () => {
+      if (bookCurrent.page > 1) {
+        document.getElementById('pages_book').selectedIndex--;
+        document.getElementById('pages_book_1').selectedIndex--;
+        var event = new Event('change');
+        document.getElementById('pages_book').dispatchEvent(event);
+        document.getElementById('pages_book_1').dispatchEvent(event);
+      }
+    });
   }
-});
-document.getElementById('next_book').addEventListener('click', () => {
-  if (bookCurrent.page < bookTotalPages) {
-    document.getElementById('pages_book').selectedIndex++;
-    var event = new Event('change');
-    document.getElementById('pages_book').dispatchEvent(event);
+);
+Array.prototype.forEach.call(
+  document.getElementsByClassName('next-page-books'),
+  (btn) => {
+    btn.addEventListener('click', () => {
+      if (bookCurrent.page < bookTotalPages) {
+        document.getElementById('pages_book').selectedIndex++;
+        document.getElementById('pages_book_1').selectedIndex++;
+        var event = new Event('change');
+        document.getElementById('pages_book').dispatchEvent(event);
+        document.getElementById('pages_book_1').dispatchEvent(event);
+      }
+    });
   }
-});
+);
 const all_comments_books_element = document.getElementById('all_comments_book');
 let all_comments_book = '';
 document.getElementById('add_comment_book').addEventListener('click', () => {
@@ -197,3 +227,24 @@ document.getElementById('send_comment_book').addEventListener('click', () => {
     },
   });
 });
+const generatePagesBook = (total, page) => {
+  if (total > 5) {
+    const pages = Math.ceil(total / 5);
+    document.getElementById(
+      'pagination_book'
+    ).innerHTML = `<span class="btn" onclick="prevNextHandlerBook('prev')"><i class="fas fa-step-backward"></i></span> ${page} of ${pages}<span class="btn" onclick="prevNextHandlerBook('next')"><i class="fas fa-step-forward"></i></span>`;
+  }
+};
+const prevNextHandlerBook = (action) => {
+  if (
+    action === 'next' &&
+    data_book.infoPage < Math.ceil(totalPaginationPagesBooks / 5)
+  ) {
+    data_book.infoPage = data_book.infoPage + 1;
+    filterBook();
+  }
+  if (action === 'prev' && data_book.infoPage > 1) {
+    data_book.infoPage = data_book.infoPage - 1;
+    filterBook();
+  }
+};

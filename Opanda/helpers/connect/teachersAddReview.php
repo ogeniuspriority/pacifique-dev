@@ -260,9 +260,21 @@ class ConnectTeacherAddReview extends DB
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $subject = strip_tags(trim(htmlspecialchars($_POST['subject'])));
             $level = strip_tags(trim(htmlspecialchars($_POST['level'])));
-            $sql = "SELECT panda_books_id, panda_books_name, panda_books_subject, panda_books_level FROM `panda_books` WHERE panda_books_subject = ? AND panda_books_level = ? AND panda_books_book_type = 1";
+            $page = strip_tags(trim(htmlspecialchars($_POST['infoPage'])));
+            $limit = 5;
+            $start = ($page - 1) * $limit;
+            $sql_total = "SELECT COUNT(panda_books_id) FROM `panda_books` WHERE panda_books_subject = ? AND panda_books_level = ? AND panda_books_book_type = 1";
+            $stmt_total = $mysqli->prepare($sql_total);
+            $stmt_total->bind_param('ss', $subject, $level);
+            $stmt_total->execute();
+            $result_total = $stmt_total->get_result();
+            $total_books = 0;
+            while ($row = mysqli_fetch_array($result_total)) {
+                $total_books = $row[0];
+            }
+            $sql = "SELECT panda_books_id, panda_books_name, panda_books_subject, panda_books_level FROM `panda_books` WHERE panda_books_subject = ? AND panda_books_level = ? AND panda_books_book_type = 1 LIMIT ?, 5";
             $stmt = $mysqli->prepare($sql);
-            $stmt->bind_param('ss', $subject, $level);
+            $stmt->bind_param('sss', $subject, $level, $start);
             $stmt->execute();
             $result = $stmt->get_result();
             $output = array();
@@ -272,6 +284,7 @@ class ConnectTeacherAddReview extends DB
                     'name' => $row[1],
                     'subject' => $row[2],
                     'level' => $row[3],
+                    'totalBooks' => $total_books
                 );
             }
 
@@ -354,7 +367,7 @@ class ConnectTeacherAddReview extends DB
                     'id' => $row[0],
                     'name' => $row[1],
                     'subject' => $row[2],
-                    'units' => $row[3],
+                    'level' => $row[3],
                 );
             }
 
