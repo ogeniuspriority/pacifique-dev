@@ -28,7 +28,7 @@
 </div>
 
 <div class="row m-2">
-    <div class="col-lg-4 p-2 sidebar rounded d-lg-block" id="wrapper_doc">
+    <div class="col-lg-4 p-2 border-right border-secondary d-lg-block" id="wrapper_doc">
         <div class="overflow-auto hei63 scroll">
             <div class="card sidebar-card-color">
                 <div class="card-body">
@@ -36,19 +36,21 @@
                 </div>
             </div>
         </div>
+        <div id="pagination_doc" class="m-3 text-center" aria-label="Page navigation example">
+        </div>
     </div>
     <div class="col-lg-8 sidebar rounded content-size">
-        <div class="content-header d-flex justify-content-between py-2">
-            <div class="form-group d-block col-md-3">
-                <button id="view_document" class="btn btn-light">View this document</button>
+        <div class="content-header d-flex justify-content-between py-2 m-3">
+            <div class="form-group d-block">
+                <button id="view_document" class="btn input-color">View this document</button>
             </div>
 
-            <div class="form-group d-block col-md-3">
-                <button id="add_review_doc" type="submit" name="submit" class="btn btn-light" data-toggle="modal" data-target="#viewDocument">See Reviews</button>
+            <div class="form-group d-block">
+                <button id="add_review_doc" type="submit" name="submit" class="btn input-color" data-toggle="modal" data-target="#viewDocument">See Reviews</button>
             </div>
         </div>
 
-        <div id="content_doc" class="page-content rounded overflow-auto hei55 scroll bg-light p-2 mb-3">
+        <div id="content_doc" class="page-content rounded overflow-auto hei55 scroll bg-white p-2 m-3">
 
             </p>
         </div>
@@ -57,9 +59,10 @@
 
 <!-- Modal -->
 <div class="modal fade" id="viewDocument" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content sidebar">
             <div class="modal-header">
+                <h5 class="modal-title" id="coursesModalLabel">See Reviews</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -68,16 +71,16 @@
                 <div class="row">
                     <div class="col-md-7 col-12">
                         <p class="text-center" id="modalPageNumberDoc"></p>
-                        <div id="add_review_content_doc" class="page-content rounded overflow-auto hei65 scroll bg-light p-2 mb-3">
+                        <div id="add_review_content_doc" class="page-content rounded overflow-auto hei65 scroll bg-white p-2 mb-3">
 
                         </div>
                     </div>
                     <div class="col-md-5 col-12">
-                        <p class="text-center">Comments on this review</p>
-                        <div id="all_comments_doc" class="page-content rounded overflow-auto hei55 scroll bg-light p-2 mb-3">
+                        <p class="text-center">Comments</p>
+                        <div id="all_comments_doc" class="page-content rounded overflow-auto hei55 scroll bg-white p-2 mb-3">
                         </div>
                         <p class="text-center" id="message_doc"></p>
-                        <div id="pagination_doc" class="m-3" aria-label="Page navigation example">
+                        <div id="pagination_doc_comment" class="m-3 text-center" aria-label="Page navigation example">
                         </div>
                     </div>
                 </div>

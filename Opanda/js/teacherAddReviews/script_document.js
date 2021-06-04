@@ -23,7 +23,7 @@ document.getElementById('level_doc').addEventListener('change', () => {
   data_doc.level = document.getElementById('level_doc').value;
 });
 let contentIdDoc = null;
-document.getElementById('filter_doc').addEventListener('click', () => {
+const filterDoc = () => {
   contentIdDoc = null;
   const wrapperElement = document.getElementById('wrapper_doc');
   wrapperElement.innerHTML = `
@@ -42,23 +42,14 @@ document.getElementById('filter_doc').addEventListener('click', () => {
       if (response.length !== 0) {
         response.forEach((res) => {
           const ele = `
-        <div class="card mb-3 sidebar-card-color">
-          <div class="card-body">
-              <div class="d-flex justify-content-between mb-2">
-                  <span class="fw-bold">Name:</span>
-                  <span class="text-end">${res.name}</span>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                  <span class="fw-bold">Subject:</span>
-                  <span class="text-end">${res.subject}</span>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                  <span class="fw-bold">Units:</span>
-                  <span class="text-end">${res.units}</span>
-              </div>
-              <div class="text-center">
-                <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContentDoc(${res.id})">Add Feedback</button>
-              </div>
+        <div class="mb-3 pb-2 border-bottom border-secondary">
+          <div class="d-flex flex-column p-2 mx-3">
+            <strong class="mb-2 h3">${res.name}</strong>
+            <span class="mb-2">${res.subject}</span>
+            <span class="mb-2">Level ${res.level}</span>
+            <div class="text-start">
+              <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContentDoc(${res.id})">Add Feedback</button>
+            </div>
           </div>
         </div>`;
           wrapperElement.innerHTML += ele;
@@ -73,7 +64,10 @@ document.getElementById('filter_doc').addEventListener('click', () => {
       }
     },
   });
-});
+};
+document
+  .getElementById('filter_doc')
+  .addEventListener('click', () => filterDoc());
 
 const dispalyContentDoc = (id) => {
   contentIdDoc = id;

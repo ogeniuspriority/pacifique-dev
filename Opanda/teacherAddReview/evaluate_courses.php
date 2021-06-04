@@ -34,7 +34,7 @@
 </div>
 
 <div class="row m-2">
-    <div class="col-lg-4 sidebar rounded hei65 mb-2 p-1">
+    <div class="col-lg-4 border-right border-secondary hei65 mb-2 p-1">
         <div class="p-2 mb-2 overflow-auto hei55" id="wrapper">
             <div class="card sidebar-card-color">
                 <div class="card-body">
@@ -42,35 +42,44 @@
                 </div>
             </div>
         </div>
-        <div id="pagination" class="m-3" aria-label="Page navigation example">
+        <div id="pagination" class="m-3 text-center" aria-label="Page navigation example">
         </div>
     </div>
     <div class="col-lg-8 sidebar rounded content-size p-1">
-        <div class="content-header d-flex justify-content-between py-2">
-            <div class="form-group d-block col-md-6">
-                <button id="add_review" type="submit" name="submit" class="btn btn-light" data-toggle="modal" data-target="#coursesModal">Add your review</button>
+        <div class="content-header d-flex justify-content-between m-3">
+            <div class="form-group d-block">
+                <button id="add_review" type="submit" name="submit" class="btn input-color" data-toggle="modal" data-target="#coursesModal">Add your review</button>
             </div>
-            <div class="form-group col-md-3">
-                <select id="pages" name="pages" class="form-control input-color">
+            <div class="d-flex">
+                <span class="btn prev-page-courses"><i class="fas fa-step-backward"></i> Previous</span>
+                <div class="form-group">
+                    <select id="pages" name="pages" class="form-control">
+                        <option value="">SELECT</option>
+                    </select>
+                </div>
+                <span class="btn next-page-courses"><i class="fas fa-step-forward"></i> Next</span>
+            </div>
+        </div>
+
+        <div id="content" class="page-content rounded overflow-auto hei40 bg-white scroll p-2 m-3">
+
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <span class="btn prev-page-courses"><i class="fas fa-step-backward"></i> Previous</span>
+            <div class="form-group">
+                <select id="pages_1" name="pages" class="form-control">
                     <option value="">SELECT</option>
                 </select>
             </div>
-        </div>
-
-        <div id="content" class="page-content rounded overflow-auto hei40 scroll bg-light p-2 mb-3">
-
-        </div>
-
-        <div class="d-flex justify-content-between pb-3">
-            <button id="previous" type="submit" name="submit" class="btn btn-light">Previous</button>
-            <button id="next" type="submit" name="submit" class="btn btn-light">Next</button>
+            <span class="btn next-page-courses"><i class="fas fa-step-forward"></i> Next</span>
         </div>
     </div>
 </div>
 
 <!-- Modal -->
 <div class="modal fade" id="coursesModal" tabindex="-1" aria-labelledby="coursesModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="coursesModalLabel">Add your review</h5>
@@ -82,11 +91,11 @@
                 <div class="row">
                     <div class="col-md-7 col-12">
                         <p id="modalPageNumber" class="text-center"></p>
-                        <div id="add_review_content" class="page-content rounded overflow-auto hei65 hei65-sm scroll bg-light p-2 mb-3">
+                        <div id="add_review_content" class="page-content rounded overflow-auto hei65 hei65-sm scroll bg-white p-2 mb-3">
                         </div>
                     </div>
                     <div class="col-md-5 col-12">
-                        <div id="all_comments" class="page-content rounded overflow-auto hei25 scroll bg-light p-2 mb-3">
+                        <div id="all_comments" class="page-content rounded overflow-auto hei30 scroll bg-white p-2 mb-3">
                         </div>
                         <div>
                             <div class="form-group">

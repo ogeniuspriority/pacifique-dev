@@ -1,0 +1,25 @@
+.class-ju {
+  background: white;
+}
+.jumbotron-class {
+  background: #e5e5e5;
+}
+.action-title {
+  color: #888888;
+  text-shadow: 4px 4px 8px #888888;
+}
+.creator {
+  color: rgb(63, 100, 201);
+  text-shadow: 4px 4px 8px rgb(63, 100, 201);
+}
+.wrapper {
+  text-align: center;
+}
+.btn-color {
+  background: #b1d1f7;
+  border: none;
+  color: #743b3b;
+}
+.btn-color-second {
+  background: #bbc17e;
+}

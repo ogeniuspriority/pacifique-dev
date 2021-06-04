@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADMIN</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha512-xA6Hp6oezhjd6LiLZynuukm80f8BoZ3OpcEYaqKoCV3HKQDrYjDE1Gu8ocxgxoXmwmSzM4iqPvCsOkQNiu41GA==" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css">
     <link rel="stylesheet" href="../css/admin.css">
@@ -17,7 +17,7 @@
         <p class="mb-0">Contribute to O'Genius Panda content</p>
     </div>
     <nav class="navbar navbar-expand-lg navbar-light">
-        <ul class="navbar-nav wrapper">
+        <ul class="navbar-nav wrapper border-bottom border-secondary">
             <li class="nav-item wrapper-item mybutton nav-bg"><a class="btn nav-link">See Review on Courses</a></li>
             <li id="ex" class="nav-item wrapper-item mybutton"><a class="btn nav-link">See Review on Exercises' Question</a></li>
             <li class="nav-item wrapper-item mybutton"><a class="btn nav-link">See Review on Written Book</a></li>
@@ -52,10 +52,9 @@
             });
         });
     </script>
-    <script src=" https://code.jquery.com/jquery-3.3.1.min.js">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap/jquery.min.js"></script>
+    <script src="../js/bootstrap/popper.min.js"></script>
+    <script src="../js/bootstrap/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
 </body>
 

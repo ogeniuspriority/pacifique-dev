@@ -93,14 +93,14 @@ class ConnectAdmin extends DB
             while ($row = mysqli_fetch_array($result)) {
                 $html_content = $row[0];
             }
-            $sql2 = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status FROM panda_comments INNER JOIN classes ON panda_comments.content_id = classes.id INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.content_link = 0 AND panda_comments.comment_type = 'courses'";
+            $sql2 = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status, panda_comments.date_created FROM panda_comments INNER JOIN classes ON panda_comments.content_id = classes.id INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.content_link = 0 AND panda_comments.comment_type = 'courses'";
             $statement2 = $mysqli->prepare($sql2);
             $statement2->bind_param('s', $id);
             $statement2->execute();
             $result2 = $statement2->get_result();
             $comments = [];
             while ($row = mysqli_fetch_array($result2)) {
-                $comments[] = array('commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3]);
+                $comments[] = array('commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3], 'time' => $row[4]);
             }
             $summary = array('htmlContent' => $html_content, 'comments' => $comments);
             $sql_get_pages = "SELECT panda_comments.content_link, course_pages.course_pages_book FROM panda_comments INNER JOIN course_pages ON panda_comments.content_link = course_pages.course_pages_id WHERE panda_comments.content_id = ? GROUP BY course_pages.course_pages_book";
@@ -151,14 +151,14 @@ class ConnectAdmin extends DB
             while ($row = mysqli_fetch_array($result_total)) {
                 $total_pages = $row[0];
             }
-            $sql = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status FROM panda_comments INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.content_link = ? AND panda_comments.comment_type = 'courses' LIMIT ?, 5";
+            $sql = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status, panda_comments.date_created FROM panda_comments INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.content_link = ? AND panda_comments.comment_type = 'courses' LIMIT ?, 5";
             $statement = $mysqli->prepare($sql);
             $statement->bind_param('sss', $content_id, $page_id, $start);
             $statement->execute();
             $result = $statement->get_result();
             $output = array();
             while ($row = mysqli_fetch_array($result)) {
-                $output[] = array('totalComments' => $total_pages, 'commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3]);
+                $output[] = array('totalComments' => $total_pages, 'commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3], 'time' => $row[4]);
             }
 
             echo json_encode($output);
@@ -310,14 +310,14 @@ class ConnectAdmin extends DB
             while ($row = mysqli_fetch_array($result_total)) {
                 $total_pages = $row[0];
             }
-            $sql = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status FROM panda_comments INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.content_link = ? AND panda_comments.comment_type = 'exercises' LIMIT ?, 5";
+            $sql = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status, panda_comments.date_created FROM panda_comments INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.content_link = ? AND panda_comments.comment_type = 'exercises' LIMIT ?, 5";
             $statement = $mysqli->prepare($sql);
             $statement->bind_param('sss', $content_id, $link_id, $start);
             $statement->execute();
             $result = $statement->get_result();
             $output = array();
             while ($row = mysqli_fetch_array($result)) {
-                $output[] = array('totalComments' => $total_pages, 'commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3]);
+                $output[] = array('totalComments' => $total_pages, 'commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3], 'time' => $row[4]);
             }
 
             echo json_encode($output);
@@ -385,14 +385,14 @@ class ConnectAdmin extends DB
             while ($row = mysqli_fetch_array($result)) {
                 $bookContent = $row[0];
             }
-            $sql_comments = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status FROM panda_comments INNER JOIN panda_books ON panda_comments.content_id = panda_books.panda_books_id INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.content_link = 0 AND panda_comments.comment_type = 'written books'";
+            $sql_comments = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status, panda_comments.date_created FROM panda_comments INNER JOIN panda_books ON panda_comments.content_id = panda_books.panda_books_id INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.content_link = 0 AND panda_comments.comment_type = 'written books'";
             $stmt_comments = $mysqli->prepare($sql_comments);
             $stmt_comments->bind_param('s', $id);
             $stmt_comments->execute();
             $result_comments = $stmt_comments->get_result();
             $comments = [];
             while ($row = mysqli_fetch_array($result_comments)) {
-                $comments[] = array('commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3]);
+                $comments[] = array('commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3], 'time' => $row[4]);
             }
             $sql_get_pages = "SELECT panda_pages_id FROM panda_pages WHERE panda_pages_book_id = ?  ORDER BY panda_pages.panda_pages_id ASC";
             $statement_get_pages = $mysqli->prepare($sql_get_pages);
@@ -426,14 +426,14 @@ class ConnectAdmin extends DB
             while ($row = mysqli_fetch_array($result_total)) {
                 $total_pages = $row[0];
             }
-            $sql = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status FROM panda_comments INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.content_link = ? AND panda_comments.comment_type = 'written books' LIMIT ?, 5";
+            $sql = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status, panda_comments.date_created FROM panda_comments INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.content_link = ? AND panda_comments.comment_type = 'written books' LIMIT ?, 5";
             $statement = $mysqli->prepare($sql);
             $statement->bind_param('sss', $content_id, $page_id, $start);
             $statement->execute();
             $result = $statement->get_result();
             $output = array();
             while ($row = mysqli_fetch_array($result)) {
-                $output[] = array('totalComments' => $total_pages, 'commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3]);
+                $output[] = array('totalComments' => $total_pages, 'commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3], 'time' => $row[4]);
             }
 
             echo json_encode($output);
@@ -521,14 +521,14 @@ class ConnectAdmin extends DB
             while ($row = mysqli_fetch_array($result_total)) {
                 $total_pages = $row[0];
             }
-            $sql = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status FROM panda_comments INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.comment_type = 'document' LIMIT ?, 5";
+            $sql = "SELECT panda_comments.comment_id, panda_comments.comment_body, users.names, panda_comments.status, panda_comments.date_created FROM panda_comments INNER JOIN users ON panda_comments.creator_id = users.id WHERE panda_comments.content_id = ? AND panda_comments.comment_type = 'document' LIMIT ?, 5";
             $statement = $mysqli->prepare($sql);
             $statement->bind_param('ss', $content_id, $start);
             $statement->execute();
             $result = $statement->get_result();
             $output = array();
             while ($row = mysqli_fetch_array($result)) {
-                $output[] = array('totalComments' => $total_pages, 'commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3]);
+                $output[] = array('totalComments' => $total_pages, 'commentId' => $row[0], 'commentBody' => $row[1], 'username' => $row[2], 'status' => $row[3], 'time' => $row[4]);
             }
 
             echo json_encode($output);

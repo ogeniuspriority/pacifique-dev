@@ -92,23 +92,14 @@ const filterCourses = (data) => {
         totalPaginationPages = response[0].totalPages;
         response.forEach((res) => {
           const ele = `
-            <div class="card mb-1 sidebar-card-color">
-              <div class="card-body p-2">
-                  <div class="d-flex justify-content-between mb-1">
-                      <span class="fw-bold">Name:</span>
-                      <span class="text-end">${res.name}</span>
-                  </div>
-                  <div class="d-flex justify-content-between mb-1">
-                      <span class="fw-bold">Subject:</span>
-                      <span class="text-end">${res.subject}</span>
-                  </div>
-                  <div class="d-flex justify-content-between mb-1">
-                      <span class="fw-bold">Units:</span>
-                      <span class="text-end">${res.units}</span>
-                  </div>
-                  <div class="text-center">
-                    <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContent(${res.id})">See Feedback</button>
-                  </div>
+            <div class="mb-3 pb-2 border-bottom border-secondary">
+              <div class="d-flex flex-column p-2 mx-3">
+                <strong class="mb-2 h3">${res.name}</strong>
+                <span class="mb-2">${res.subject}</span>
+                <span class="mb-2">${res.units}</span>
+                <div class="text-start">
+                  <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContent(${res.id})">See Feedback</button>
+                </div>
               </div>
             </div>`;
           wrapperElement.innerHTML += ele;
@@ -162,22 +153,20 @@ const dispalyContent = (id) => {
       if (response.summary.comments[0]) {
         response.summary.comments.forEach((summary) => {
           const ele = `
-          <div class="card mb-1 sidebar-card-color">
-            <div class="card-body p-2">
+            <div class="p-3 border-bottom border-secondary">
             ${summary.commentBody}
-            <p class="text-center mb-0">Comment by teacher ${
+            <div class="d-flex justify-content-between mb-0" style="font-size: 13px;"><span class="primary-color">By ${
               summary.username
-            }</p>
-            <p class="text-center mb-0">Status: ${summary.status}</p>
-            <p class="text-center ${
-              summary.status == 'approved' ? 'd-none' : ''
-            } mb-0">
-              <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="approveReview(${
-                summary.commentId
-              })">Approve Review</button>
-            </p>
-            </div>
-          </div>`;
+            }</span> <span class="text-end">${summary.time}</span></div>
+            <span class="mb-0" style="font-size: 13px;">Status: ${
+              summary.status
+            }</span>
+          <div class="${summary.status == 'approved' ? 'd-none' : ''} mb-0">
+            <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="approveReview(${
+              summary.commentId
+            })">Approve Review</button>
+          </div>
+            </div>`;
           commentsElement.innerHTML += ele;
         });
       } else {
@@ -189,11 +178,14 @@ const dispalyContent = (id) => {
         </div>`;
       }
       const pagesElement = document.getElementById('pages');
+      const pagesElement_1 = document.getElementById('pages_1');
       pagesElement.innerHTML = '<option>SELECT</option>';
+      pagesElement_1.innerHTML = '<option>SELECT</option>';
       totalPages = response.pages.length;
       response.pages.forEach((page) => {
         const option = `<option value="${page.pageId}">Page ${page.pageNumber}</option>`;
         pagesElement.innerHTML += option;
+        pagesElement_1.innerHTML += option;
       });
       document.getElementById('modalPageNumber').innerHTML = 'Summary';
     },
@@ -233,28 +225,53 @@ document.getElementById('pages').addEventListener('change', (e) => {
     .options[document.getElementById('pages').selectedIndex].text.split(' ')[1];
   current.id = e.target.value;
   current.pageNumber = document.getElementById('pages').selectedIndex;
+  document.getElementById('pages_1').selectedIndex =
+    document.getElementById('pages').selectedIndex;
   getPageContent(e.target.value);
 });
-document.getElementById('previous').addEventListener('click', () => {
-  if (current.pageNumber > 1) {
-    document.getElementById('pages').selectedIndex--;
-    var event = new Event('change');
-    document.getElementById('pages').dispatchEvent(event);
-  }
+document.getElementById('pages_1').addEventListener('change', (e) => {
+  document.getElementById('all_comments').innerHTML = '';
+  paginationPage = 1;
+  current.page = document
+    .getElementById('pages_1')
+    .options[document.getElementById('pages_1').selectedIndex].text.split(
+      ' '
+    )[1];
+  current.id = e.target.value;
+  current.pageNumber = document.getElementById('pages_1').selectedIndex;
+  document.getElementById('pages').selectedIndex =
+    document.getElementById('pages_1').selectedIndex;
+  getPageContent(e.target.value);
 });
-document.getElementById('next').addEventListener('click', () => {
-  if (current.pageNumber < totalPages) {
-    document.getElementById('pages').selectedIndex++;
-    var event = new Event('change');
-    document.getElementById('pages').dispatchEvent(event);
+Array.prototype.forEach.call(
+  document.getElementsByClassName('prev-page-courses'),
+  (btn) => {
+    btn.addEventListener('click', () => {
+      if (current.pageNumber > 1) {
+        document.getElementById('pages').selectedIndex--;
+        document.getElementById('pages_1').selectedIndex--;
+        var event = new Event('change');
+        document.getElementById('pages').dispatchEvent(event);
+        document.getElementById('pages_1').dispatchEvent(event);
+      }
+    });
   }
-});
+);
+Array.prototype.forEach.call(
+  document.getElementsByClassName('next-page-courses'),
+  (btn) => {
+    btn.addEventListener('click', () => {
+      if (current.pageNumber < totalPages) {
+        document.getElementById('pages').selectedIndex++;
+        document.getElementById('pages_1').selectedIndex++;
+        var event = new Event('change');
+        document.getElementById('pages').dispatchEvent(event);
+        document.getElementById('pages_1').dispatchEvent(event);
+      }
+    });
+  }
+);
 const getCommentsPerPage = () => {
-  if (document.querySelector('.pagination2')) {
-    document
-      .getElementById('pagination_comments')
-      .removeChild(document.querySelector('.pagination2'));
-  }
   document.getElementById('message').innerHTML = '';
   if (current.id != 0) {
     $.ajax({
@@ -272,22 +289,20 @@ const getCommentsPerPage = () => {
         if (response[0]) {
           response.forEach((comment) => {
             const ele = `
-          <div class="card mb-1 sidebar-card-color">
-            <div class="card-body p-2">
+            <div class="p-3 border-bottom border-secondary">
             ${comment.commentBody}
-            <p class="text-center mb-0">Comment by teacher ${
+            <div class="d-flex justify-content-between mb-0" style="font-size: 13px;"><span class="primary-color">By ${
               comment.username
-            }</p>
-            <p class="text-center mb-0">Status: ${comment.status}</p>
-          <p class="text-center ${
-            comment.status == 'approved' ? 'd-none' : ''
-          } mb-0">
+            }</span> <span class="text-end">${comment.time}</span></div>
+            <span class="mb-0" style="font-size: 13px;">Status: ${
+              comment.status
+            }</span>
+          <div class="${comment.status == 'approved' ? 'd-none' : ''} mb-0">
             <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="approveReview(${
               comment.commentId
             })">Approve Review</button>
-          </p>
-            </div>
-          </div>`;
+          </div>
+            </div>`;
             commentsElement.innerHTML += ele;
           });
           totalPaginationPagesComments = response[0].totalComments;
@@ -307,11 +322,6 @@ const getCommentsPerPage = () => {
 };
 document.getElementById('add_review').addEventListener('click', () => {
   paginationPage = 1;
-  if (document.querySelector('.pagination2')) {
-    document
-      .getElementById('pagination_comments')
-      .removeChild(document.querySelector('.pagination2'));
-  }
   if (current.page != 0) {
     getCommentsPerPage();
   }
@@ -340,70 +350,10 @@ const approveReview = (id) => {
 const generatePages = (total, page) => {
   if (total > 5) {
     const pages = Math.ceil(total / 5);
-    if (pages <= 5) {
-      let pageBtns = '';
-      for (let i = 1; i <= pages; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandler(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandler(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination'
-      ).innerHTML = `<ul class="pagination pagination1 justify-content-center">
-                  <li class="page-item" onclick="prevNextHandler('prev')">
-                      <button class="page-link" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                      </button>
-                  </li>
-                  ${pageBtns}
-                  <li class="page-item" onclick="prevNextHandler('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                      </button>
-                  </li>
-              </ul>`;
-    } else {
-      let pageBtns = '';
-      for (let i = 1; i < 4; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandler(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandler(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination'
-      ).innerHTML = `<ul class="pagination pagination1 justify-content-center">
-                  <li class="page-item" onclick="prevNextHandler('prev')">
-                      <button class="page-link" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                      </button>
-                  </li>
-                  ${pageBtns}
-                  <li class="page-item">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">...</span>
-                      </button>
-                  </li>
-                  <li class="page-item" onclick="prevNextHandler('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">${pages}</span>
-                      </button>
-                  </li>
-                  <li class="page-item" onclick="prevNextHandler('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                      </button>
-                  </li>
-              </ul>`;
-    }
+    document.getElementById(
+      'pagination'
+    ).innerHTML = `<span class="btn" onclick="prevNextHandler('prev')"><i class="fas fa-step-backward"></i></span> ${page} of ${pages}<span class="btn" onclick="prevNextHandler('next')"><i class="fas fa-step-forward"></i></span>`;
   }
-};
-const changePageHandler = (page) => {
-  data.infoPage = page;
-  filterCourses(data);
 };
 const prevNextHandler = (action) => {
   if (
@@ -421,70 +371,10 @@ const prevNextHandler = (action) => {
 const generatePagesComments = (total, page) => {
   if (total > 5) {
     const pages = Math.ceil(total / 5);
-    if (pages <= 5) {
-      let pageBtns = '';
-      for (let i = 1; i <= pages; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandlerComments(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandlerComments(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination_comments'
-      ).innerHTML = `<ul class="pagination pagination2 justify-content-center">
-                  <li class="page-item" onclick="prevNextHandlerComments('prev')">
-                      <button class="page-link" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                      </button>
-                  </li>
-                  ${pageBtns}
-                  <li class="page-item" onclick="prevNextHandlerComments('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                      </button>
-                  </li>
-              </ul>`;
-    } else {
-      let pageBtns = '';
-      for (let i = 1; i < 4; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandlerComments(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandlerComments(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination_comments'
-      ).innerHTML = `<ul class="pagination pagination2 justify-content-center">
-                  <li class="page-item" onclick="prevNextHandlerComments('prev')">
-                      <button class="page-link" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                      </button>
-                  </li>
-                  ${pageBtns}
-                  <li class="page-item">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">...</span>
-                      </button>
-                  </li>
-                  <li class="page-item" onclick="prevNextHandlerComments('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">${pages}</span>
-                      </button>
-                  </li>
-                  <li class="page-item" onclick="prevNextHandlerComments('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                      </button>
-                  </li>
-              </ul>`;
-    }
+    document.getElementById(
+      'pagination_comments'
+    ).innerHTML = `<span class="btn" onclick="prevNextHandlerComments('prev')"><i class="fas fa-step-backward"></i></span> ${page} of ${pages}<span class="btn" onclick="prevNextHandlerComments('next')"><i class="fas fa-step-forward"></i></span>`;
   }
-};
-const changePageHandlerComments = (page) => {
-  paginationPage = page;
-  getCommentsPerPage();
 };
 const prevNextHandlerComments = (action) => {
   if (

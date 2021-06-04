@@ -23,16 +23,17 @@ document.getElementById('subject_book').addEventListener('change', () => {
 document.getElementById('level_book').addEventListener('change', () => {
   data_book.level = document.getElementById('level_book').value;
 });
-let contentIdBook = null;
-document.getElementById('filter_book').addEventListener('click', () => {
+let contentIdBook = null,
+  totalPaginationPagesBook = 0;
+const filterBooks = () => {
   contentIdBook = null;
   const wrapperElement = document.getElementById('wrapper_book');
   wrapperElement.innerHTML = `
-    <div class="d-flex justify-content-center">
-      <div id="spinner" class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div>`;
+      <div class="d-flex justify-content-center">
+        <div id="spinner" class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>`;
   $.ajax({
     url: '../classes/admin/writtenBooks/getInfoBook.php',
     method: 'post',
@@ -41,40 +42,36 @@ document.getElementById('filter_book').addEventListener('click', () => {
     success: (response) => {
       wrapperElement.innerHTML = '';
       if (response.length !== 0) {
+        totalPaginationPagesBook = response[0].totalPages;
         response.forEach((res) => {
           const ele = `
-          <div class="card mb-1 p-2 sidebar-card-color">
-            <div class="card-body p-0">
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold">Name:</span>
-                    <span class="text-end">${res.name}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold">Subject:</span>
-                    <span class="text-end">${res.subject}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold">Level:</span>
-                    <span class="text-end">${res.level}</span>
-                </div>
-                <div class="text-center">
+            <div class="mb-3 pb-2 border-bottom border-secondary">
+              <div class="d-flex flex-column p-2 mx-3">
+                <strong class="mb-2 h3">${res.name}</strong>
+                <span class="mb-2">${res.subject}</span>
+                <span class="mb-2">${res.level}</span>
+                <div class="text-start">
                   <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContentBook(${res.id})">Add Feedback</button>
                 </div>
-            </div>
-          </div>`;
+              </div>
+            </div>`;
           wrapperElement.innerHTML += ele;
         });
+        generatePagesBook(response[0].totalPages, data_book.page);
       } else {
         wrapperElement.innerHTML = `
-          <div class="card sidebar-card-color">
-            <div class="card-body">
-                No content / End of content!!!
-            </div>
-          </div>`;
+            <div class="card sidebar-card-color">
+              <div class="card-body">
+                  No content / End of content!!!
+              </div>
+            </div>`;
       }
     },
   });
-});
+};
+document
+  .getElementById('filter_book')
+  .addEventListener('click', () => filterBooks());
 let bookCurrent = { page: 0, id: 0 },
   bookTotalPages = 0,
   totalComments = 0,
@@ -105,22 +102,20 @@ const dispalyContentBook = (id) => {
       if (response.summary.comments[0]) {
         response.summary.comments.forEach((summary) => {
           const ele = `
-          <div class="card mb-1 sidebar-card-color">
-            <div class="card-body p-2">
+            <div class="p-3 border-bottom border-secondary">
             ${summary.commentBody}
-            <p class="text-center mb-0">Comment by teacher ${
+            <div class="d-flex justify-content-between mb-0" style="font-size: 13px;"><span class="primary-color">By ${
               summary.username
-            }</p>
-            <p class="text-center mb-0">Status: ${summary.status}</p>
-            <p class="text-center ${
-              summary.status == 'approved' ? 'd-none' : ''
-            } mb-0">
-              <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="approveReviewBook(${
-                summary.commentId
-              })">Approve Review</button>
-            </p>
-            </div>
-          </div>`;
+            }</span> <span class="text-end">${summary.time}</span></div>
+            <span class="mb-0" style="font-size: 13px;">Status: ${
+              summary.status
+            }</span>
+          <div class="${summary.status == 'approved' ? 'd-none' : ''} mb-0">
+            <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="approveReviewBook(${
+              summary.commentId
+            })">Approve Review</button>
+          </div>
+            </div>`;
           commentsElement.innerHTML += ele;
         });
       } else {
@@ -132,11 +127,14 @@ const dispalyContentBook = (id) => {
         </div>`;
       }
       const pagesElement = document.getElementById('pages_book');
+      const pagesElement_1 = document.getElementById('pages_book_1');
       pagesElement.innerHTML = '<option>SELECT</option>';
+      pagesElement_1.innerHTML = '<option>SELECT</option>';
       bookTotalPages = response.pages.length;
       response.pages.forEach((page, index) => {
         const option = `<option value="${page}">Page ${index + 1}</option>`;
         pagesElement.innerHTML += option;
+        pagesElement_1.innerHTML += option;
       });
       document.getElementById('modalPageNumberBook').innerHTML = 'Summary';
       window.scrollTo(0, document.body.scrollHeight);
@@ -180,29 +178,50 @@ document.getElementById('pages_book').addEventListener('change', (e) => {
       ' '
     )[1];
   bookCurrent.id = e.target.value;
+  document.getElementById('pages_book_1').selectedIndex =
+    document.getElementById('pages_book').selectedIndex;
   getBookPageContent(e.target.value);
 });
-
-document.getElementById('previous_book').addEventListener('click', () => {
-  if (bookCurrent.page > 1) {
-    document.getElementById('pages_book').selectedIndex--;
-    var event = new Event('change');
-    document.getElementById('pages_book').dispatchEvent(event);
-  }
+document.getElementById('pages_book_1').addEventListener('change', (e) => {
+  bookCurrent.page = document
+    .getElementById('pages_book_1')
+    .options[document.getElementById('pages_book_1').selectedIndex].text.split(
+      ' '
+    )[1];
+  bookCurrent.id = e.target.value;
+  document.getElementById('pages_book').selectedIndex =
+    document.getElementById('pages_book_1').selectedIndex;
+  getBookPageContent(e.target.value);
 });
-document.getElementById('next_book').addEventListener('click', () => {
-  if (bookCurrent.page < bookTotalPages) {
-    document.getElementById('pages_book').selectedIndex++;
-    var event = new Event('change');
-    document.getElementById('pages_book').dispatchEvent(event);
+Array.prototype.forEach.call(
+  document.getElementsByClassName('prev-page-books'),
+  (btn) => {
+    btn.addEventListener('click', () => {
+      if (bookCurrent.page > 1) {
+        document.getElementById('pages_book').selectedIndex--;
+        document.getElementById('pages_book_1').selectedIndex--;
+        var event = new Event('change');
+        document.getElementById('pages_book').dispatchEvent(event);
+        document.getElementById('pages_book_1').dispatchEvent(event);
+      }
+    });
   }
-});
+);
+Array.prototype.forEach.call(
+  document.getElementsByClassName('next-page-books'),
+  (btn) => {
+    btn.addEventListener('click', () => {
+      if (bookCurrent.page < bookTotalPages) {
+        document.getElementById('pages_book').selectedIndex++;
+        document.getElementById('pages_book_1').selectedIndex++;
+        var event = new Event('change');
+        document.getElementById('pages_book').dispatchEvent(event);
+        document.getElementById('pages_book_1').dispatchEvent(event);
+      }
+    });
+  }
+);
 const getCommentsPerPageBook = () => {
-  if (document.querySelector('.pagination2')) {
-    document
-      .getElementById('pagination_book')
-      .removeChild(document.querySelector('.pagination2'));
-  }
   document.getElementById('message_book').innerHTML = '';
   if (bookCurrent.id != 0) {
     $.ajax({
@@ -220,21 +239,19 @@ const getCommentsPerPageBook = () => {
         if (response[0]) {
           response.forEach((comment) => {
             const ele = `
-            <div class="card mb-1 sidebar-card-color">
-              <div class="card-body p-2">
-              ${comment.commentBody}
-              <p class="text-center mb-0">Comment by teacher ${
-                comment.username
-              }</p>
-              <p class="text-center mb-0">Status: ${comment.status}</p>
-            <p class="text-center ${
-              comment.status == 'approved' ? 'd-none' : ''
-            } mb-0">
-              <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="approveReviewBook(${
-                comment.commentId
-              })">Approve Review</button>
-            </p>
-              </div>
+            <div class="p-3 border-bottom border-secondary">
+            ${comment.commentBody}
+            <div class="d-flex justify-content-between mb-0" style="font-size: 13px;"><span class="primary-color">By ${
+              comment.username
+            }</span> <span class="text-end">${comment.time}</span></div>
+            <span class="mb-0" style="font-size: 13px;">Status: ${
+              comment.status
+            }</span>
+          <div class="${comment.status == 'approved' ? 'd-none' : ''} mb-0">
+            <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="approveReviewBook(${
+              comment.commentId
+            })">Approve Review</button>
+          </div>
             </div>`;
             commentsElement.innerHTML += ele;
           });
@@ -257,11 +274,6 @@ const getCommentsPerPageBook = () => {
 };
 document.getElementById('add_review_book').addEventListener('click', () => {
   totalComments = 0;
-  if (document.querySelector('.pagination2')) {
-    document
-      .getElementById('pagination_book')
-      .removeChild(document.querySelector('.pagination2'));
-  }
   if (bookCurrent.page != 0) {
     getCommentsPerPageBook();
   }
@@ -287,73 +299,34 @@ const approveReviewBook = (id) => {
     },
   });
 };
+const generatePagesBook = (total, page) => {
+  if (total > 5) {
+    const pages = Math.ceil(total / 5);
+    document.getElementById(
+      'pagination_book'
+    ).innerHTML = `<span class="btn" onclick="prevNextHandlerBook('prev')"><i class="fas fa-step-backward"></i></span> ${page} of ${pages}<span class="btn" onclick="prevNextHandlerBook('next')"><i class="fas fa-step-forward"></i></span>`;
+  }
+};
+const prevNextHandlerBook = (action) => {
+  if (
+    action === 'next' &&
+    data_book.page < Math.ceil(totalPaginationPagesBook / 5)
+  ) {
+    data_book.page = data_book.page + 1;
+    filterBooks();
+  }
+  if (action === 'prev' && data_book.page > 1) {
+    data_book.page = data_book.page - 1;
+    filterBooks();
+  }
+};
 const generatePagesCommentsBook = (total, page) => {
   if (total > 5) {
     const pages = Math.ceil(total / 5);
-    if (pages <= 5) {
-      let pageBtns = '';
-      for (let i = 1; i <= pages; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandlerCommentsBook(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandlerCommentsBook(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination_book'
-      ).innerHTML = `<ul class="pagination pagination2 justify-content-center">
-                  <li class="page-item" onclick="prevNextHandlerCommentsBook('prev')">
-                      <button class="page-link" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                      </button>
-                  </li>
-                  ${pageBtns}
-                  <li class="page-item" onclick="prevNextHandlerCommentsBook('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                      </button>
-                  </li>
-              </ul>`;
-    } else {
-      let pageBtns = '';
-      for (let i = 1; i < 4; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandlerCommentsBook(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandlerCommentsBook(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination_book'
-      ).innerHTML = `<ul class="pagination pagination2 justify-content-center">
-                  <li class="page-item" onclick="prevNextHandlerCommentsBook('prev')">
-                      <button class="page-link" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                      </button>
-                  </li>
-                  ${pageBtns}
-                  <li class="page-item">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">...</span>
-                      </button>
-                  </li>
-                  <li class="page-item" onclick="prevNextHandlerCommentsBook('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">${pages}</span>
-                      </button>
-                  </li>
-                  <li class="page-item" onclick="prevNextHandlerCommentsBook('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                      </button>
-                  </li>
-              </ul>`;
-    }
+    document.getElementById(
+      'pagination_book_comment'
+    ).innerHTML = `<span class="btn" onclick="prevNextHandlerCommentsBook('prev')"><i class="fas fa-step-backward"></i></span> ${page} of ${pages}<span class="btn" onclick="prevNextHandlerCommentsBook('next')"><i class="fas fa-step-forward"></i></span>`;
   }
-};
-const changePageHandlerCommentsBook = (page) => {
-  paginationPageBook = page;
-  getCommentsPerPageBook();
 };
 const prevNextHandlerCommentsBook = (action) => {
   if (action === 'next' && paginationPageBook < Math.ceil(totalComments / 5)) {

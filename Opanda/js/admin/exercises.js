@@ -95,25 +95,19 @@ const filterExercises = (dataEx) => {
         totalPaginationPagesExercises = response[0].totalPages;
         response.forEach((res) => {
           const ele = `
-          <div class="card mb-1 sidebar-card-color">
-            <div class="card-body p-2">
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold">Topic:</span>
-                    <span class="text-end"> ${res.subject} Level ${res.level} ${
+          <div class="mb-3 pb-2 border-bottom border-secondary">
+            <div class="d-flex flex-column p-2 mx-3">
+              <span class="mb-2 h3"> ${res.subject} Level ${res.level} ${
             res.units.split(':')[0]
           }</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold">Summary:</span>
-                    <span class="text-end"> ${res.summary.substring(0, 40)}${
-            res.summary.length > 40 ? '...' : ''
+              <span class="mb-2"> ${res.summary.substring(0, 50)}${
+            res.summary.length > 50 ? '...' : ''
           }</span>
-                </div>
-                <div class="text-center">
-                  <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContentExercises(${
-                    res.id
-                  })">See Feedback</button>
-                <div>
+              <div class="text-start">
+                <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="dispalyContentExercises(${
+                  res.id
+                })">See Feedback</button>
+              <div>
             </div>
           </div>`;
           wrapperElement.innerHTML += ele;
@@ -162,7 +156,7 @@ const dispalyContentExercises = (id) => {
         }</label>
             </div>
             <div class="">
-              <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#questionModal" onclick='optionAddReview(${JSON.stringify(
+              <button type="button" class="btn input-color btn-sm" data-toggle="modal" data-target="#questionModal" onclick='optionAddReview(${JSON.stringify(
                 answer
               )})'>See your review</button>
             </div>
@@ -232,22 +226,20 @@ const getCommentsExercises = () => {
       if (response[0]) {
         response.forEach((comment) => {
           const ele = `
-              <div class="card mb-1 sidebar-card-color">
-                <div class="card-body p-2">
-                ${comment.commentBody}
-                <p class="text-center mb-0">Comment by teacher ${
-                  comment.username
-                }</p>
-                <p class="text-center mb-0">Status: ${comment.status}</p>
-              <p class="text-center ${
-                comment.status == 'approved' ? 'd-none' : ''
-              } mb-0">
-                <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="approveReviewExercises(${
-                  comment.commentId
-                })">Approve Review</button>
-              </p>
-                </div>
-              </div>`;
+            <div class="p-3 border-bottom border-secondary">
+            ${comment.commentBody}
+            <div class="d-flex justify-content-between mb-0" style="font-size: 13px;"><span class="primary-color">By ${
+              comment.username
+            }</span> <span class="text-end">${comment.time}</span></div>
+            <span class="mb-0" style="font-size: 13px;">Status: ${
+              comment.status
+            }</span>
+          <div class="${comment.status == 'approved' ? 'd-none' : ''} mb-0">
+            <button type="submit" name="submit" class="btn input-color py-1 mt-2" onclick="approveReviewExercises(${
+              comment.commentId
+            })">Approve Review</button>
+          </div>
+            </div>`;
           commentsElement.innerHTML += ele;
         });
         totalPaginationPagesCommentsExercises = response[0].totalComments;
@@ -286,70 +278,10 @@ const approveReviewExercises = (id) => {
 const generatePagesExercises = (total, page) => {
   if (total > 5) {
     const pages = Math.ceil(total / 5);
-    if (pages <= 5) {
-      let pageBtns = '';
-      for (let i = 1; i <= pages; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandlerExercises(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandlerExercises(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination_ex'
-      ).innerHTML = `<ul class="pagination pagination1 justify-content-center">
-                  <li class="page-item" onclick="prevNextHandlerExercises('prev')">
-                      <button class="page-link" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                      </button>
-                  </li>
-                  ${pageBtns}
-                  <li class="page-item" onclick="prevNextHandlerExercises('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                      </button>
-                  </li>
-              </ul>`;
-    } else {
-      let pageBtns = '';
-      for (let i = 1; i < 4; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandlerExercises(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandlerExercises(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination_ex'
-      ).innerHTML = `<ul class="pagination pagination1 justify-content-center">
-                  <li class="page-item" onclick="prevNextHandlerExercises('prev')">
-                      <button class="page-link" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                      </button>
-                  </li>
-                  ${pageBtns}
-                  <li class="page-item">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">...</span>
-                      </button>
-                  </li>
-                  <li class="page-item" onclick="prevNextHandlerExercises('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">${pages}</span>
-                      </button>
-                  </li>
-                  <li class="page-item" onclick="prevNextHandlerExercises('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                      </button>
-                  </li>
-              </ul>`;
-    }
+    document.getElementById(
+      'pagination_ex'
+    ).innerHTML = `<span class="btn" onclick="prevNextHandlerExercises('prev')"><i class="fas fa-step-backward"></i></span> ${page} of ${pages}<span class="btn" onclick="prevNextHandlerExercises('next')"><i class="fas fa-step-forward"></i></span>`;
   }
-};
-const changePageHandlerExercises = (page) => {
-  dataExercises.infoPage = page;
-  filterExercises(dataExercises);
 };
 const prevNextHandlerExercises = (action) => {
   if (
@@ -367,70 +299,10 @@ const prevNextHandlerExercises = (action) => {
 const generatePagesCommentsExercises = (total, page) => {
   if (total > 5) {
     const pages = Math.ceil(total / 5);
-    if (pages <= 5) {
-      let pageBtns = '';
-      for (let i = 1; i <= pages; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandlerCommentsExercises(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandlerCommentsExercises(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination_comments_ex'
-      ).innerHTML = `<ul class="pagination pagination2 justify-content-center">
-                  <li class="page-item" onclick="prevNextHandlerCommentsExercises('prev')">
-                      <button class="page-link" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                      </button>
-                  </li>
-                  ${pageBtns}
-                  <li class="page-item" onclick="prevNextHandlerCommentsExercises('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                      </button>
-                  </li>
-              </ul>`;
-    } else {
-      let pageBtns = '';
-      for (let i = 1; i < 4; i++) {
-        if (i === page) {
-          pageBtns += `<li class="page-item active"><button class="page-link" onclick="changePageHandlerCommentsExercises(${i})">${i}</button></li>`;
-        } else {
-          pageBtns += `<li class="page-item"><button class="page-link" onclick="changePageHandlerCommentsExercises(${i})">${i}</button></li>`;
-        }
-      }
-      document.getElementById(
-        'pagination_comments_ex'
-      ).innerHTML = `<ul class="pagination pagination2 justify-content-center">
-                  <li class="page-item" onclick="prevNextHandlerCommentsExercises('prev')">
-                      <button class="page-link" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                      </button>
-                  </li>
-                  ${pageBtns}
-                  <li class="page-item">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">...</span>
-                      </button>
-                  </li>
-                  <li class="page-item" onclick="prevNextHandlerCommentsExercises('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">${pages}</span>
-                      </button>
-                  </li>
-                  <li class="page-item" onclick="prevNextHandlerCommentsExercises('next')">
-                      <button class="page-link" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                      </button>
-                  </li>
-              </ul>`;
-    }
+    document.getElementById(
+      'pagination_comments_ex'
+    ).innerHTML = `<span class="btn" onclick="prevNextHandlerCommentsExercises('prev')"><i class="fas fa-step-backward"></i></span> ${page} of ${pages}<span class="btn" onclick="prevNextHandlerCommentsExercises('next')"><i class="fas fa-step-forward"></i></span>`;
   }
-};
-const changePageHandlerCommentsExercises = (page) => {
-  paginationPageExercises = page;
-  getCommentsExercises();
 };
 const prevNextHandlerCommentsExercises = (action) => {
   if (

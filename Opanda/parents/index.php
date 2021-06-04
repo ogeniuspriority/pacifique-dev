@@ -97,9 +97,9 @@ require_once("partials/header.php");
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+<script src="../js/bootstrap/jquery.min.js"></script>
+<script src="../js/bootstrap/popper.min.js"></script>
+<script src="../js/bootstrap/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="../js/parents.js"></script>
